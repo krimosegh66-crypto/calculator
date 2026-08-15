@@ -620,11 +620,11 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- ====== JavaScript – النسخة المصححة بالكامل ====== -->
+    <!-- ====== JavaScript – الترجمة الكاملة والمحصنة ====== -->
     <!-- ============================================================ -->
     <script>
         // =============================================================
-        // 1. الترجمة – 8 لغات مع كل النصوص
+        // 1. الترجمة – 8 لغات (بنية مبسطة بدون أخطاء)
         // =============================================================
         const translations = {
             ar: {
@@ -1014,7 +1014,7 @@
         };
 
         // =============================================================
-        // 2. البيانات – الآلات الحاسبة
+        // 2. البيانات – الآلات الحاسبة (الأسماء والوصف بالعربية)
         // =============================================================
         const calculatorsData = [
             { id: 'bmi', name: 'BMI', icon: '⚖️', category: 'صحة', desc: 'مؤشر كتلة الجسم' },
@@ -1049,17 +1049,22 @@
         ];
 
         // =============================================================
-        // 3. دوال اللغة – الكشف والتطبيق (نسخة محصنة)
+        // 3. دوال اللغة – كشف دقيق وتطبيق آمن
         // =============================================================
+
+        // كشف اللغة من المتصفح ونظام التشغيل
         function detectUserLanguage() {
             const supported = ['ar', 'en', 'fr', 'es', 'de', 'zh', 'hi', 'ru'];
-            
+
+            // 1. التحقق من التفضيل المحفوظ
             try {
                 const saved = localStorage.getItem('preferredLanguage');
                 if (saved && supported.includes(saved)) return saved;
             } catch (e) {}
 
+            // 2. التحقق من لغات المتصفح (الأكثر دقة)
             try {
+                // navigator.languages يعطي قائمة مرتبة حسب التفضيل
                 const langs = navigator.languages || [navigator.language || 'en'];
                 for (let lang of langs) {
                     if (typeof lang === 'string') {
@@ -1069,6 +1074,14 @@
                 }
             } catch (e) {}
 
+            // 3. التحقق من اللغة الافتراضية للمتصفح
+            try {
+                const lang = navigator.language || 'en';
+                const base = lang.split('-')[0].toLowerCase();
+                if (supported.includes(base)) return base;
+            } catch (e) {}
+
+            // 4. التحقق من المنطقة الزمنية (كحل أخير)
             try {
                 const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
                 const map = {
@@ -1085,9 +1098,11 @@
                 if (map[tz]) return map[tz];
             } catch (e) {}
 
+            // 5. اللغة الافتراضية
             return 'en';
         }
 
+        // تطبيق الترجمة على كل العناصر
         function applyTranslations(lang) {
             // التحقق من وجود الترجمة
             if (typeof translations === 'undefined' || !translations) {
@@ -1095,10 +1110,10 @@
                 return;
             }
 
-            // التحقق من اللغة
+            // التحقق من دعم اللغة
             const supported = ['ar', 'en', 'fr', 'es', 'de', 'zh', 'hi', 'ru'];
             if (!supported.includes(lang) || !translations[lang]) {
-                console.warn(`⚠️ لغة غير مدعومة: "${lang}"، استخدام الإنجليزية`);
+                console.warn('⚠️ لغة غير مدعومة، استخدام الإنجليزية');
                 lang = 'en';
                 if (!translations[lang]) {
                     console.error('❌ حتى الإنجليزية غير متوفرة!');
@@ -1108,13 +1123,14 @@
 
             const t = translations[lang];
 
-            // تطبيق الترجمة على العناصر
+            // تطبيق الترجمة على جميع العناصر التي تحمل data-i18n
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.dataset.i18n;
                 if (key && t[key] !== undefined && t[key] !== null) {
                     try {
-                        const isHtml = ['hero.title', 'about.text', 'notification.title', 'notification.desc'];
-                        if (isHtml.includes(key)) {
+                        // النصوص التي تحتوي على HTML
+                        const htmlKeys = ['hero.title', 'about.text', 'notification.title', 'notification.desc'];
+                        if (htmlKeys.includes(key)) {
                             el.innerHTML = t[key];
                         } else {
                             el.textContent = t[key];
@@ -1123,7 +1139,7 @@
                 }
             });
 
-            // اتجاه الصفحة
+            // تغيير اتجاه الصفحة
             try {
                 document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
                 document.documentElement.lang = lang;
@@ -1135,7 +1151,7 @@
                 if (selector) selector.value = lang;
             } catch (e) {}
 
-            // تحديث placeholder
+            // تحديث placeholder في البحث
             try {
                 const search = document.getElementById('global-search');
                 if (search && t['search.placeholder']) {
@@ -1159,6 +1175,7 @@
             } catch (e) {}
         }
 
+        // عرض إشعار اللغة
         function showLanguageNotification(lang) {
             try {
                 if (!translations || !translations[lang]) {
@@ -1256,6 +1273,9 @@
             }
         }
 
+        // =============================================================
+        // 5. النافذة المنبثقة – مع ترجمة فورية
+        // =============================================================
         function openCalculator(id) {
             try {
                 const modal = document.getElementById('calcModal');
@@ -1267,18 +1287,18 @@
                 const calc = calculatorsData.find(c => c.id === id);
                 title.textContent = calc ? `${calc.icon} ${calc.name}` : 'آلة حاسبة';
 
-                // الحصول على اللغة الحالية
+                // الحصول على اللغة الحالية والترجمة
                 const currentLang = document.documentElement.lang || 'ar';
                 const t = translations[currentLang] || translations['en'];
 
                 content.innerHTML = `
                     <div class="input-group">
-                        <label data-i18n="calc.example">${t['calc.example'] || 'أدخل القيمة'}</label>
+                        <label>${t['calc.example'] || 'أدخل القيمة'}</label>
                         <input type="number" id="calc-input" placeholder="0" step="any">
                     </div>
                     <div class="btn-group">
-                        <button class="btn-primary" onclick="calculateSimple()" data-i18n="calc.calculate">${t['calc.calculate'] || 'احسب'}</button>
-                        <button class="btn-secondary" onclick="resetCalculator()" data-i18n="calc.reset">${t['calc.reset'] || 'إعادة تعيين'}</button>
+                        <button class="btn-primary" onclick="calculateSimple()">${t['calc.calculate'] || 'احسب'}</button>
+                        <button class="btn-secondary" onclick="resetCalculator()">${t['calc.reset'] || 'إعادة تعيين'}</button>
                     </div>
                     <div class="result-box" id="calc-result">
                         <div id="calc-result-value"></div>
@@ -1297,7 +1317,7 @@
         }
 
         // =============================================================
-        // 5. دوال مساعدة
+        // 6. دوال مساعدة
         // =============================================================
         window.calculateSimple = function() {
             try {
@@ -1335,7 +1355,7 @@
         };
 
         // =============================================================
-        // 6. التهيئة – نسخة محصنة بالكامل
+        // 7. التهيئة – محصنة بالكامل
         // =============================================================
         function init() {
             console.log('🚀 بدء تشغيل حاسباتي العالمية...');
@@ -1346,7 +1366,7 @@
                 return;
             }
 
-            // 2. كشف اللغة مع حماية
+            // 2. كشف اللغة
             let lang = 'en';
             try {
                 lang = detectUserLanguage();
@@ -1354,7 +1374,7 @@
                 console.warn('⚠️ خطأ في كشف اللغة، استخدام الافتراضية:', e);
             }
 
-            // 3. التأكد من أن اللغة مدعومة
+            // 3. التأكد من دعم اللغة
             const supported = ['ar', 'en', 'fr', 'es', 'de', 'zh', 'hi', 'ru'];
             if (!supported.includes(lang) || !translations[lang]) {
                 console.warn(`⚠️ اللغة "${lang}" غير مدعومة، استخدام الإنجليزية`);
@@ -1369,7 +1389,7 @@
                 }
             } catch (e) { /* تجاهل */ }
 
-            // 5. تطبيق اللغة مع حماية
+            // 5. تطبيق اللغة
             try {
                 applyTranslations(lang);
                 console.log(`🌍 تم تطبيق اللغة: ${lang}`);
@@ -1384,7 +1404,7 @@
                 }
             }
 
-            // 6. عرض الإشعار إذا كانت اللغة مكتشفة تلقائياً
+            // 6. عرض إشعار اللغة (إذا لم يكن هناك تفضيل محفوظ)
             try {
                 const saved = localStorage.getItem('preferredLanguage');
                 if (!saved) {
@@ -1404,31 +1424,30 @@
                 if (toggle) toggle.textContent = theme === 'dark' ? '☀️' : '🌙';
             } catch (e) { /* تجاهل */ }
 
-            // 9. تحديث محدد اللغة
-            try {
-                const selector = document.getElementById('lang-selector');
-                if (selector) selector.value = lang;
-            } catch (e) { /* تجاهل */ }
-
             console.log(`✅ حاسباتي العالمية جاهزة! (اللغة: ${lang})`);
             console.log(`📊 عدد الآلات الحاسبة: ${calculatorsData?.length || 0}`);
         }
 
         // =============================================================
-        // 7. الأحداث – كلها محصنة
+        // 8. الأحداث – كلها محصنة
         // =============================================================
+
+        // بدء التشغيل بعد تحميل الصفحة
         document.addEventListener('DOMContentLoaded', () => {
-            // تأخير بسيط لضمان تحميل DOM بالكامل
             setTimeout(init, 50);
         });
 
-        // تغيير اللغة يدوياً
-        document.getElementById('lang-selector')?.addEventListener('change', (e) => {
-            const lang = e.target.value;
-            localStorage.setItem('preferredLanguage', lang);
-            applyTranslations(lang);
-            document.getElementById('langNotification')?.classList.remove('active');
-        });
+        // تغيير اللغة يدوياً من القائمة المنسدلة
+        const langSelector = document.getElementById('lang-selector');
+        if (langSelector) {
+            langSelector.addEventListener('change', (e) => {
+                const lang = e.target.value;
+                localStorage.setItem('preferredLanguage', lang);
+                applyTranslations(lang);
+                const notif = document.getElementById('langNotification');
+                if (notif) notif.classList.remove('active');
+            });
+        }
 
         // روابط اللغة في التذييل
         document.querySelectorAll('.footer-lang a').forEach(link => {
@@ -1436,37 +1455,54 @@
                 e.preventDefault();
                 const lang = link.dataset.lang;
                 localStorage.setItem('preferredLanguage', lang);
-                document.getElementById('lang-selector').value = lang;
+                const selector = document.getElementById('lang-selector');
+                if (selector) selector.value = lang;
                 applyTranslations(lang);
-                document.getElementById('langNotification')?.classList.remove('active');
+                const notif = document.getElementById('langNotification');
+                if (notif) notif.classList.remove('active');
             });
         });
 
         // أزرار إشعار اللغة
-        document.getElementById('langNotifConfirm')?.addEventListener('click', () => {
-            document.getElementById('langNotification')?.classList.remove('active');
-        });
-        document.getElementById('langNotifDismiss')?.addEventListener('click', () => {
-            document.getElementById('langNotification')?.classList.remove('active');
-        });
+        const confirmBtn = document.getElementById('langNotifConfirm');
+        const dismissBtn = document.getElementById('langNotifDismiss');
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', () => {
+                const notif = document.getElementById('langNotification');
+                if (notif) notif.classList.remove('active');
+            });
+        }
+        if (dismissBtn) {
+            dismissBtn.addEventListener('click', () => {
+                const notif = document.getElementById('langNotification');
+                if (notif) notif.classList.remove('active');
+            });
+        }
 
         // الوضع الليلي
-        document.getElementById('theme-toggle')?.addEventListener('click', () => {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
-            const toggle = document.getElementById('theme-toggle');
-            if (toggle) toggle.textContent = next === 'dark' ? '☀️' : '🌙';
-        });
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                const next = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('theme', next);
+                themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+            });
+        }
 
         // إغلاق النافذة المنبثقة
-        document.getElementById('closeModal')?.addEventListener('click', resetCalculator);
-        document.getElementById('calcModal')?.addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) resetCalculator();
-        });
+        const closeBtn = document.getElementById('closeModal');
+        if (closeBtn) closeBtn.addEventListener('click', resetCalculator);
 
-        // الفلترة
+        const modalOverlay = document.getElementById('calcModal');
+        if (modalOverlay) {
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) resetCalculator();
+            });
+        }
+
+        // أزرار الفلترة
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
