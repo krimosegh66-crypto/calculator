@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -620,11 +621,11 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- ====== JavaScript – الترجمة الكاملة والمحصنة ====== -->
+    <!-- ====== JavaScript – الترجمة الكاملة مع دعم ديناميكي ====== -->
     <!-- ============================================================ -->
     <script>
         // =============================================================
-        // 1. الترجمة – 8 لغات (بنية مبسطة بدون أخطاء)
+        // 1. الترجمة – 8 لغات
         // =============================================================
         const translations = {
             ar: {
@@ -1014,7 +1015,7 @@
         };
 
         // =============================================================
-        // 2. البيانات – الآلات الحاسبة (الأسماء والوصف بالعربية)
+        // 2. البيانات – الآلات الحاسبة
         // =============================================================
         const calculatorsData = [
             { id: 'bmi', name: 'BMI', icon: '⚖️', category: 'صحة', desc: 'مؤشر كتلة الجسم' },
@@ -1049,22 +1050,18 @@
         ];
 
         // =============================================================
-        // 3. دوال اللغة – كشف دقيق وتطبيق آمن
+        // 3. دوال اللغة – مع دعم ديناميكي
         // =============================================================
 
-        // كشف اللغة من المتصفح ونظام التشغيل
         function detectUserLanguage() {
             const supported = ['ar', 'en', 'fr', 'es', 'de', 'zh', 'hi', 'ru'];
 
-            // 1. التحقق من التفضيل المحفوظ
             try {
                 const saved = localStorage.getItem('preferredLanguage');
                 if (saved && supported.includes(saved)) return saved;
             } catch (e) {}
 
-            // 2. التحقق من لغات المتصفح (الأكثر دقة)
             try {
-                // navigator.languages يعطي قائمة مرتبة حسب التفضيل
                 const langs = navigator.languages || [navigator.language || 'en'];
                 for (let lang of langs) {
                     if (typeof lang === 'string') {
@@ -1074,14 +1071,6 @@
                 }
             } catch (e) {}
 
-            // 3. التحقق من اللغة الافتراضية للمتصفح
-            try {
-                const lang = navigator.language || 'en';
-                const base = lang.split('-')[0].toLowerCase();
-                if (supported.includes(base)) return base;
-            } catch (e) {}
-
-            // 4. التحقق من المنطقة الزمنية (كحل أخير)
             try {
                 const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
                 const map = {
@@ -1098,19 +1087,18 @@
                 if (map[tz]) return map[tz];
             } catch (e) {}
 
-            // 5. اللغة الافتراضية
             return 'en';
         }
 
-        // تطبيق الترجمة على كل العناصر
+        // =============================================================
+        // دالة الترجمة الرئيسية – مع دعم المحتوى الديناميكي
+        // =============================================================
         function applyTranslations(lang) {
-            // التحقق من وجود الترجمة
             if (typeof translations === 'undefined' || !translations) {
                 console.error('❌ كائن الترجمة غير موجود!');
                 return;
             }
 
-            // التحقق من دعم اللغة
             const supported = ['ar', 'en', 'fr', 'es', 'de', 'zh', 'hi', 'ru'];
             if (!supported.includes(lang) || !translations[lang]) {
                 console.warn('⚠️ لغة غير مدعومة، استخدام الإنجليزية');
@@ -1123,12 +1111,11 @@
 
             const t = translations[lang];
 
-            // تطبيق الترجمة على جميع العناصر التي تحمل data-i18n
+            // 1. ترجمة العناصر الثابتة في الصفحة
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.dataset.i18n;
                 if (key && t[key] !== undefined && t[key] !== null) {
                     try {
-                        // النصوص التي تحتوي على HTML
                         const htmlKeys = ['hero.title', 'about.text', 'notification.title', 'notification.desc'];
                         if (htmlKeys.includes(key)) {
                             el.innerHTML = t[key];
@@ -1139,19 +1126,42 @@
                 }
             });
 
-            // تغيير اتجاه الصفحة
+            // 2. ترجمة العناصر الديناميكية (التي تحمل data-i18n-dynamic)
+            document.querySelectorAll('[data-i18n-dynamic]').forEach(el => {
+                const key = el.dataset.i18nDynamic;
+                if (key && t[key] !== undefined && t[key] !== null) {
+                    el.textContent = t[key];
+                }
+            });
+
+            // 3. ترجمة أزرار النافذة المنبثقة مباشرة
+            const modalContent = document.getElementById('modalContent');
+            if (modalContent) {
+                const btns = modalContent.querySelectorAll('.btn-primary, .btn-secondary, label');
+                btns.forEach(el => {
+                    if (el.classList.contains('btn-primary')) {
+                        el.textContent = t['calc.calculate'] || 'احسب';
+                    } else if (el.classList.contains('btn-secondary')) {
+                        el.textContent = t['calc.reset'] || 'إعادة تعيين';
+                    } else if (el.tagName === 'LABEL') {
+                        el.textContent = t['calc.example'] || 'أدخل القيمة';
+                    }
+                });
+            }
+
+            // 4. تغيير اتجاه الصفحة
             try {
                 document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
                 document.documentElement.lang = lang;
             } catch (e) {}
 
-            // تحديث محدد اللغة
+            // 5. تحديث محدد اللغة
             try {
                 const selector = document.getElementById('lang-selector');
                 if (selector) selector.value = lang;
             } catch (e) {}
 
-            // تحديث placeholder في البحث
+            // 6. تحديث placeholder
             try {
                 const search = document.getElementById('global-search');
                 if (search && t['search.placeholder']) {
@@ -1159,7 +1169,7 @@
                 }
             } catch (e) {}
 
-            // تحديث عنوان الصفحة
+            // 7. تحديث عنوان الصفحة
             try {
                 const titles = {
                     ar: 'حاسباتي العالمية – آلات حاسبة دقيقة ومجانية',
@@ -1274,7 +1284,7 @@
         }
 
         // =============================================================
-        // 5. النافذة المنبثقة – مع ترجمة فورية
+        // 5. النافذة المنبثقة – مع ترجمة فورية وديناميكية
         // =============================================================
         function openCalculator(id) {
             try {
@@ -1293,12 +1303,12 @@
 
                 content.innerHTML = `
                     <div class="input-group">
-                        <label>${t['calc.example'] || 'أدخل القيمة'}</label>
+                        <label data-i18n-dynamic="calc.example">${t['calc.example'] || 'أدخل القيمة'}</label>
                         <input type="number" id="calc-input" placeholder="0" step="any">
                     </div>
                     <div class="btn-group">
-                        <button class="btn-primary" onclick="calculateSimple()">${t['calc.calculate'] || 'احسب'}</button>
-                        <button class="btn-secondary" onclick="resetCalculator()">${t['calc.reset'] || 'إعادة تعيين'}</button>
+                        <button class="btn-primary" data-i18n-dynamic="calc.calculate" onclick="calculateSimple()">${t['calc.calculate'] || 'احسب'}</button>
+                        <button class="btn-secondary" data-i18n-dynamic="calc.reset" onclick="resetCalculator()">${t['calc.reset'] || 'إعادة تعيين'}</button>
                     </div>
                     <div class="result-box" id="calc-result">
                         <div id="calc-result-value"></div>
@@ -1355,18 +1365,16 @@
         };
 
         // =============================================================
-        // 7. التهيئة – محصنة بالكامل
+        // 7. التهيئة
         // =============================================================
         function init() {
             console.log('🚀 بدء تشغيل حاسباتي العالمية...');
 
-            // 1. التأكد من وجود الترجمة
             if (typeof translations === 'undefined' || !translations || Object.keys(translations).length === 0) {
                 console.error('❌ كائن الترجمة غير موجود!');
                 return;
             }
 
-            // 2. كشف اللغة
             let lang = 'en';
             try {
                 lang = detectUserLanguage();
@@ -1374,14 +1382,12 @@
                 console.warn('⚠️ خطأ في كشف اللغة، استخدام الافتراضية:', e);
             }
 
-            // 3. التأكد من دعم اللغة
             const supported = ['ar', 'en', 'fr', 'es', 'de', 'zh', 'hi', 'ru'];
             if (!supported.includes(lang) || !translations[lang]) {
                 console.warn(`⚠️ اللغة "${lang}" غير مدعومة، استخدام الإنجليزية`);
                 lang = 'en';
             }
 
-            // 4. التحقق من التفضيل المخزن
             try {
                 const saved = localStorage.getItem('preferredLanguage');
                 if (saved && supported.includes(saved) && translations[saved]) {
@@ -1389,7 +1395,6 @@
                 }
             } catch (e) { /* تجاهل */ }
 
-            // 5. تطبيق اللغة
             try {
                 applyTranslations(lang);
                 console.log(`🌍 تم تطبيق اللغة: ${lang}`);
@@ -1404,7 +1409,6 @@
                 }
             }
 
-            // 6. عرض إشعار اللغة (إذا لم يكن هناك تفضيل محفوظ)
             try {
                 const saved = localStorage.getItem('preferredLanguage');
                 if (!saved) {
@@ -1412,11 +1416,9 @@
                 }
             } catch (e) { /* تجاهل */ }
 
-            // 7. تحميل المحتوى
             renderCalculators('all');
             renderCategories();
 
-            // 8. الوضع الليلي
             try {
                 const theme = localStorage.getItem('theme') || 'light';
                 document.documentElement.setAttribute('data-theme', theme);
@@ -1429,15 +1431,14 @@
         }
 
         // =============================================================
-        // 8. الأحداث – كلها محصنة
+        // 8. الأحداث
         // =============================================================
 
-        // بدء التشغيل بعد تحميل الصفحة
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(init, 50);
         });
 
-        // تغيير اللغة يدوياً من القائمة المنسدلة
+        // تغيير اللغة يدوياً
         const langSelector = document.getElementById('lang-selector');
         if (langSelector) {
             langSelector.addEventListener('change', (e) => {
