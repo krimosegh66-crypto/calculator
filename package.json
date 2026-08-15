@@ -1,0 +1,19 @@
+{
+  "name": "calculators",
+  "version": "1.0.0",
+  "description": "A modern, scalable calculator platform with 47+ free online calculators across Finance, Health, Math and Conversions.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "eleventy",
+    "start": "eleventy --serve",
+    "dev": "eleventy --serve --port 8080",
+    "watch": "eleventy --watch"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}
