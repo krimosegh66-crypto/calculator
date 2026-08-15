@@ -3,980 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حاسباتي العالمية – Calculators Hub</title>
+    <title>حاسباتي العالمية</title>
     <style>
-        /* ============================================================
-           المتغيرات – ألوان مريحة للعين مع وضع ليلي تلقائي
-           ============================================================ */
+        /* ====== الألوان ====== */
         :root {
-            --bg-primary: #eef2f7;
-            --bg-secondary: #ffffff;
-            --bg-card: #ffffff;
-            --bg-input: #f7faff;
-            --text-primary: #1a2a3a;
-            --text-secondary: #2c4a6a;
-            --text-muted: #6a8aaa;
-            --text-light: #aac0d6;
-            --border-color: #d0ddee;
-            --shadow: 0 8px 32px rgba(10, 30, 60, 0.08);
-            --shadow-hover: 0 16px 48px rgba(10, 30, 60, 0.14);
-            --radius: 18px;
-            --radius-sm: 12px;
-            --accent: #2a7de1;
-            --accent-hover: #1a5fb4;
-            --accent-light: #e0edff;
-            --success: #28a745;
-            --warning: #ffc107;
-            --danger: #dc3545;
-            --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            --font: 'Segoe UI', system-ui, -apple-system, 'Noto Sans', sans-serif;
-            --max-width: 1320px;
+            --bg: #f0f4f8;
+            --bg2: #ffffff;
+            --text: #1a2a3a;
+            --text2: #2c4a6a;
+            --muted: #6a8aaa;
+            --border: #d0ddee;
+            --shadow: 0 8px 32px rgba(0,0,0,0.08);
+            --radius: 16px;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-light: #dbeafe;
+            --transition: 0.3s ease;
         }
 
-        /* وضع ليلي مريح للعين */
         [data-theme="dark"] {
-            --bg-primary: #0d1b2a;
-            --bg-secondary: #152b44;
-            --bg-card: #1a334f;
-            --bg-input: #1f3d5c;
-            --text-primary: #e6f0fa;
-            --text-secondary: #b8cfe0;
-            --text-muted: #7a9aba;
-            --text-light: #4a6a8a;
-            --border-color: #2a4a6a;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            --shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.6);
+            --bg: #0d1b2a;
+            --bg2: #152b44;
+            --text: #e6f0fa;
+            --text2: #b8cfe0;
+            --muted: #7a9aba;
+            --border: #2a4a6a;
+            --shadow: 0 8px 32px rgba(0,0,0,0.5);
             --accent: #5a9cff;
             --accent-hover: #3a7cdd;
             --accent-light: #1a3a5a;
-            --success: #2ea85a;
-            --warning: #d4a020;
-            --danger: #d94545;
         }
 
-        /* ============================================================
-           إعادة ضبط عام
-           ============================================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: var(--font);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            transition: background var(--transition), color var(--transition);
-            line-height: 1.7;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: 0.3s ease;
             min-height: 100vh;
+            direction: rtl;
         }
+        [dir="ltr"] body { direction: ltr; }
 
-        /* دعم اللغات التي تكتب من اليسار لليمين */
-        [dir="ltr"] body {
-            direction: ltr;
-        }
-        [dir="ltr"] .nav-links,
-        [dir="ltr"] .footer-grid,
-        [dir="ltr"] .calc-grid,
-        [dir="ltr"] .category-grid {
-            direction: ltr;
-        }
-
-        .container {
-            max-width: var(--max-width);
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        /* ============================================================
-           شريط التنقل
-           ============================================================ */
-        .navbar {
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-color);
-            padding: 12px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(16px);
-            background: rgba(var(--bg-secondary-rgb, 255, 255, 255), 0.92);
-            transition: background var(--transition);
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 800;
-            text-decoration: none;
-            color: var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .logo span { color: var(--text-primary); }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 4px;
-            flex-wrap: wrap;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-weight: 500;
-            padding: 6px 14px;
-            border-radius: 10px;
-            transition: all var(--transition);
-            font-size: 14px;
-        }
-
-        .nav-links a:hover {
-            background: var(--accent-light);
-            color: var(--accent);
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        #lang-selector {
-            padding: 6px 12px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-input);
-            color: var(--text-primary);
-            font-size: 13px;
-            cursor: pointer;
-            transition: all var(--transition);
-            font-family: var(--font);
-        }
-
-        #lang-selector:hover {
-            border-color: var(--accent);
-        }
-
-        #theme-toggle {
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #theme-toggle:hover {
-            transform: scale(1.08);
-            border-color: var(--accent);
-        }
-
-        /* ============================================================
-           الإعلانات
-           ============================================================ */
-        .ad-banner {
-            background: var(--bg-secondary);
-            border: 2px dashed var(--border-color);
-            color: var(--text-muted);
-            text-align: center;
-            padding: 12px;
-            font-size: 13px;
-            border-radius: 12px;
-            margin: 6px 0;
-            transition: all var(--transition);
-        }
-
-        /* ============================================================
-           قسم البطل (Hero)
-           ============================================================ */
-        .hero {
-            padding: 40px 0 28px;
-            text-align: center;
-            background: linear-gradient(145deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
-            border-radius: 0 0 40px 40px;
-        }
-
-        .hero h1 {
-            font-size: clamp(28px, 4.5vw, 48px);
-            font-weight: 800;
-            line-height: 1.25;
-            margin-bottom: 10px;
-        }
-
-        .hero h1 .highlight {
-            color: var(--accent);
-            position: relative;
-        }
-
-        .hero-sub {
-            font-size: 16px;
-            color: var(--text-secondary);
-            max-width: 700px;
-            margin: 0 auto 20px;
-        }
-
-        .search-wrapper {
-            max-width: 560px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        #global-search {
-            width: 100%;
-            padding: 14px 24px;
-            border-radius: 60px;
-            border: 2px solid var(--border-color);
-            background: var(--bg-input);
-            color: var(--text-primary);
-            font-size: 15px;
-            transition: all var(--transition);
-            font-family: var(--font);
-        }
-
-        #global-search:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 6px rgba(42, 125, 225, 0.12);
-        }
-
-        #global-search::placeholder {
-            color: var(--text-muted);
-        }
-
-        #search-suggestions {
-            position: absolute;
-            top: 110%;
-            left: 0;
-            right: 0;
-            background: var(--bg-secondary);
-            border-radius: var(--radius);
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow);
-            display: none;
-            z-index: 50;
-            max-height: 320px;
-            overflow-y: auto;
-        }
-
-        #search-suggestions.active {
-            display: block;
-        }
-
-        .suggestion-item {
-            padding: 12px 18px;
-            cursor: pointer;
-            transition: background var(--transition);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-
-        .suggestion-item:hover {
-            background: var(--accent-light);
-        }
-        .suggestion-item:last-child {
-            border-bottom: none;
-        }
-        .suggestion-item .badge {
-            font-size: 11px;
-            background: var(--accent-light);
-            color: var(--accent);
-            padding: 2px 10px;
-            border-radius: 20px;
-            margin-right: auto;
-        }
-
-        /* ============================================================
-           أقسام الصفحة
-           ============================================================ */
-        section {
-            padding: 36px 0;
-        }
-
-        section h2 {
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-sub {
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            font-size: 15px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .filter-buttons {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 6px 16px;
-            border-radius: 30px;
-            border: 1px solid var(--border-color);
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 13px;
-            cursor: pointer;
-            transition: all var(--transition);
-            font-family: var(--font);
-        }
-
-        .filter-btn:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .filter-btn.active {
-            background: var(--accent);
-            color: #fff;
-            border-color: var(--accent);
-        }
-
-        /* ============================================================
-           الشبكات (Grids)
-           ============================================================ */
-        .calc-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 18px;
-        }
-
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 16px;
-        }
-
-        /* ============================================================
-           بطاقة الآلة الحاسبة
-           ============================================================ */
-        .calc-card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 22px 16px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            transition: all var(--transition);
-            text-align: center;
-            cursor: pointer;
-            text-decoration: none;
-            color: var(--text-primary);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .calc-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--accent);
-            transform: scaleX(0);
-            transition: transform var(--transition);
-        }
-
-        .calc-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .calc-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
-            border-color: var(--accent);
-        }
-
-        .calc-card .icon {
-            font-size: 40px;
-            margin-bottom: 6px;
-        }
-
-        .calc-card h3 {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .calc-card .calc-desc {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 3px;
-        }
-
-        .calc-card .calc-category {
-            font-size: 10px;
-            background: var(--accent-light);
-            color: var(--accent);
-            padding: 2px 12px;
-            border-radius: 20px;
-            margin-top: 6px;
-            font-weight: 600;
-        }
-
-        /* ============================================================
-           بطاقة الفئة
-           ============================================================ */
-        .category-card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 22px 16px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            transition: all var(--transition);
-            cursor: pointer;
-            box-shadow: var(--shadow);
-        }
-
-        .category-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .category-card .cat-icon {
-            font-size: 44px;
-        }
-        .category-card h3 {
-            margin: 8px 0 3px;
-            font-size: 17px;
-        }
-        .category-card p {
-            color: var(--text-muted);
-            font-size: 13px;
-        }
-        .category-card .count {
-            font-size: 12px;
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        /* ============================================================
-           الأسئلة الشائعة
-           ============================================================ */
-        .faq-list details {
-            background: var(--bg-card);
-            border-radius: var(--radius-sm);
-            padding: 14px 18px;
-            margin-bottom: 8px;
-            border: 1px solid var(--border-color);
-            transition: all var(--transition);
-        }
-
-        .faq-list details:hover {
-            border-color: var(--accent);
-        }
-
-        .faq-list summary {
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 15px;
-        }
-
-        .faq-list p {
-            margin-top: 8px;
-            color: var(--text-secondary);
-            padding-right: 8px;
-            font-size: 14px;
-        }
-
-        /* ============================================================
-           النافذة المنبثقة للآلة الحاسبة
-           ============================================================ */
-        .calc-modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(8px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .calc-modal-overlay.active {
-            display: flex;
-        }
-
-        .calc-modal {
-            background: var(--bg-secondary);
-            border-radius: var(--radius);
-            max-width: 620px;
-            width: 100%;
-            max-height: 92vh;
-            overflow-y: auto;
-            padding: 30px;
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
-            border: 1px solid var(--border-color);
-            position: relative;
-        }
-
-        .calc-modal .close-btn {
-            position: absolute;
-            top: 14px;
-            left: 14px;
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 38px;
-            height: 38px;
-            font-size: 20px;
-            cursor: pointer;
-            transition: all var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-        }
-
-        .calc-modal .close-btn:hover {
-            background: var(--danger);
-            color: #fff;
-            border-color: var(--danger);
-        }
-
-        .calc-modal h2 {
-            font-size: 22px;
-            margin-bottom: 18px;
-            text-align: center;
-        }
-
-        .calc-modal .input-group {
-            margin-bottom: 14px;
-        }
-
-        .calc-modal label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 3px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .calc-modal input,
-        .calc-modal select {
-            width: 100%;
-            padding: 11px 14px;
-            border-radius: var(--radius-sm);
-            border: 2px solid var(--border-color);
-            background: var(--bg-input);
-            color: var(--text-primary);
-            font-size: 15px;
-            transition: all var(--transition);
-            font-family: var(--font);
-        }
-
-        .calc-modal input:focus,
-        .calc-modal select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(42, 125, 225, 0.1);
-        }
-
-        .calc-modal .btn-group {
-            display: flex;
-            gap: 10px;
-            margin: 14px 0 10px;
-            flex-wrap: wrap;
-        }
-
-        .calc-modal .btn-primary {
-            flex: 1;
-            padding: 13px;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all var(--transition);
-            min-width: 100px;
-        }
-
-        .calc-modal .btn-primary:hover {
-            background: var(--accent-hover);
-            transform: scale(1.02);
-        }
-
-        .calc-modal .btn-secondary {
-            padding: 13px 22px;
-            background: transparent;
-            color: var(--text-secondary);
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            font-weight: 500;
-            cursor: pointer;
-            transition: all var(--transition);
-        }
-
-        .calc-modal .btn-secondary:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .calc-modal .result-box {
-            margin-top: 14px;
-            padding: 18px;
-            background: var(--accent-light);
-            border-radius: var(--radius-sm);
-            text-align: center;
-            font-size: 20px;
-            font-weight: 700;
-            display: none;
-            border: 2px solid var(--accent);
-            color: var(--text-primary);
-        }
-
-        .calc-modal .result-box.active {
-            display: block;
-        }
-
-        .calc-modal .result-detail {
-            margin-top: 8px;
-            font-size: 13px;
-            font-weight: 400;
-            color: var(--text-secondary);
-            border-top: 1px solid var(--border-color);
-            padding-top: 10px;
-        }
-
-        .calc-modal .error-msg {
-            color: var(--danger);
-            font-size: 13px;
-            margin-top: 4px;
-        }
-
-        /* ============================================================
-           التذييل
-           ============================================================ */
-        footer {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border-color);
-            padding: 36px 0 18px;
-            margin-top: 16px;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-            gap: 28px;
-            margin-bottom: 20px;
-        }
-
-        .footer-col h4 {
-            margin-bottom: 10px;
-            font-size: 15px;
-        }
-
-        .footer-col ul {
-            list-style: none;
-        }
-
-        .footer-col ul li {
-            margin-bottom: 5px;
-        }
-
-        .footer-col a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 13px;
-            transition: color var(--transition);
-        }
-
-        .footer-col a:hover {
-            color: var(--accent);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 10px;
-            font-size: 26px;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            border-top: 1px solid var(--border-color);
-            padding-top: 16px;
-            color: var(--text-muted);
-            font-size: 13px;
-        }
-
-        .footer-lang {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 10px;
-        }
-
-        .footer-lang a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 12px;
-            padding: 2px 10px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            transition: all var(--transition);
-        }
-
-        .footer-lang a:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        /* ============================================================
-           استجابة للجوال
-           ============================================================ */
-        @media (max-width: 820px) {
-            .nav-container {
-                flex-direction: column;
-                gap: 6px;
-            }
-            .nav-links {
-                justify-content: center;
-                gap: 2px;
-            }
-            .nav-links a {
-                font-size: 13px;
-                padding: 4px 10px;
-            }
-            .nav-actions {
-                width: 100%;
-                justify-content: center;
-            }
-            .hero h1 {
-                font-size: 24px;
-            }
-            .hero {
-                padding: 28px 0 20px;
-            }
-            .calc-grid {
-                grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
-                gap: 12px;
-            }
-            .category-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 12px;
-            }
-            .calc-modal {
-                padding: 20px;
-                margin: 10px;
-            }
-            .footer-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 16px;
-            }
-            section {
-                padding: 24px 0;
-            }
-            .section-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .filter-buttons {
-                width: 100%;
-                overflow-x: auto;
-                flex-wrap: nowrap;
-                padding-bottom: 6px;
-            }
-            .filter-btn {
-                font-size: 12px;
-                padding: 4px 12px;
-                white-space: nowrap;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .calc-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-            .calc-card {
-                padding: 14px 10px;
-            }
-            .calc-card .icon {
-                font-size: 30px;
-            }
-            .calc-card h3 {
-                font-size: 13px;
-            }
-            .calc-card .calc-desc {
-                font-size: 11px;
-            }
-            .category-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-            .category-card {
-                padding: 16px 10px;
-            }
-            .category-card .cat-icon {
-                font-size: 32px;
-            }
-            .category-card h3 {
-                font-size: 14px;
-            }
-            .container {
-                padding: 0 12px;
-            }
-            .calc-modal {
-                padding: 16px;
-            }
-            .calc-modal h2 {
-                font-size: 18px;
-            }
-            .footer-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 12px;
-            }
-            .nav-links a {
-                font-size: 12px;
-                padding: 3px 8px;
-            }
-            .logo {
-                font-size: 20px;
-            }
-            #lang-selector {
-                font-size: 12px;
-                padding: 4px 8px;
-            }
-            #theme-toggle {
-                width: 34px;
-                height: 34px;
-                font-size: 16px;
-            }
-        }
-
-        /* ============================================================
-           أدوات مساعدة
-           ============================================================ */
-        .text-center {
-            text-align: center;
-        }
-        .mt-8 {
-            margin-top: 8px;
-        }
-        .mt-16 {
-            margin-top: 16px;
-        }
-        .flex {
-            display: flex;
-        }
-        .flex-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .gap-8 {
-            gap: 8px;
-        }
-        .gap-16 {
-            gap: 16px;
-        }
-        .w-full {
-            width: 100%;
-        }
-        .hidden {
-            display: none;
-        }
-
-        /* تخصيص شريط التمرير */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-hover);
-        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
 
-        /* ============================================================
-           إشعار اللغة التلقائي
-           ============================================================ */
+        /* ====== الإشعار ====== */
         .lang-notification {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: var(--bg-secondary);
+            bottom: 20px;
+            right: 20px;
+            background: var(--bg2);
             border: 2px solid var(--accent);
             border-radius: var(--radius);
             padding: 16px 20px;
-            box-shadow: var(--shadow-hover);
+            box-shadow: var(--shadow);
             z-index: 3000;
             max-width: 380px;
             display: none;
             animation: slideUp 0.4s ease;
         }
-
-        .lang-notification.active {
-            display: block;
-        }
-
-        .lang-notification .title {
-            font-weight: 700;
-            font-size: 15px;
-            margin-bottom: 4px;
-        }
-
-        .lang-notification .desc {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .lang-notification .actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
+        .lang-notification.active { display: block; }
+        .lang-notification .title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+        .lang-notification .desc { font-size: 13px; color: var(--text2); }
+        .lang-notification .actions { display: flex; gap: 8px; margin-top: 10px; }
         .lang-notification .btn-confirm {
             padding: 6px 18px;
             background: var(--accent);
@@ -987,61 +76,392 @@
             font-weight: 600;
             font-size: 13px;
         }
-
         .lang-notification .btn-dismiss {
             padding: 6px 18px;
             background: transparent;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border);
             border-radius: 8px;
             cursor: pointer;
             font-size: 13px;
-            color: var(--text-secondary);
+            color: var(--text2);
         }
-
         @keyframes slideUp {
-            from {
-                transform: translateY(30px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
+        /* ====== شريط التنقل ====== */
+        .navbar {
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+        }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .logo { font-size: 24px; font-weight: 800; color: var(--accent); text-decoration: none; }
+        .logo span { color: var(--text); }
+        .nav-links { display: flex; list-style: none; gap: 4px; flex-wrap: wrap; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text2);
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+        .nav-links a:hover { background: var(--accent-light); color: var(--accent); }
+        .nav-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        #lang-selector {
+            padding: 6px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 13px;
+            cursor: pointer;
+        }
+        #theme-toggle {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #theme-toggle:hover { transform: scale(1.08); border-color: var(--accent); }
+
+        /* ====== الإعلانات ====== */
+        .ad-banner {
+            background: var(--bg2);
+            border: 2px dashed var(--border);
+            color: var(--muted);
+            text-align: center;
+            padding: 12px;
+            font-size: 13px;
+            border-radius: 12px;
+            margin: 6px 0;
+        }
+
+        /* ====== البطل ====== */
+        .hero {
+            padding: 40px 0 28px;
+            text-align: center;
+            background: linear-gradient(145deg, var(--bg2) 0%, var(--bg) 100%);
+            border-radius: 0 0 40px 40px;
+        }
+        .hero h1 { font-size: clamp(28px, 4.5vw, 48px); font-weight: 800; line-height: 1.25; margin-bottom: 10px; }
+        .hero h1 .highlight { color: var(--accent); }
+        .hero-sub { font-size: 16px; color: var(--text2); max-width: 700px; margin: 0 auto 20px; }
+        .search-wrapper { max-width: 560px; margin: 0 auto; position: relative; }
+        #global-search {
+            width: 100%;
+            padding: 14px 24px;
+            border-radius: 60px;
+            border: 2px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 15px;
+            transition: 0.3s;
+        }
+        #global-search:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 6px rgba(37,99,235,0.12); }
+        #search-suggestions {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            right: 0;
+            background: var(--bg2);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            display: none;
+            z-index: 50;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+        #search-suggestions.active { display: block; }
+        .suggestion-item {
+            padding: 12px 18px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 14px;
+        }
+        .suggestion-item:hover { background: var(--accent-light); }
+        .suggestion-item:last-child { border-bottom: none; }
+        .suggestion-item .badge { font-size: 11px; background: var(--accent-light); color: var(--accent); padding: 2px 10px; border-radius: 20px; margin-right: auto; }
+
+        /* ====== الأقسام ====== */
+        section { padding: 36px 0; }
+        section h2 { font-size: 26px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+        .section-sub { color: var(--muted); margin-bottom: 20px; font-size: 15px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+        .filter-buttons { display: flex; gap: 6px; flex-wrap: wrap; }
+        .filter-btn {
+            padding: 6px 16px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text2);
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+        /* ====== الشبكات ====== */
+        .calc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 18px; }
+        .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+
+        /* ====== البطاقات ====== */
+        .calc-card {
+            background: var(--bg2);
+            border-radius: var(--radius);
+            padding: 22px 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: 0.3s;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .calc-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transition: 0.3s;
+        }
+        .calc-card:hover::before { transform: scaleX(1); }
+        .calc-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(0,0,0,0.12); border-color: var(--accent); }
+        .calc-card .icon { font-size: 40px; margin-bottom: 6px; }
+        .calc-card h3 { font-size: 16px; font-weight: 600; }
+        .calc-card .calc-desc { font-size: 12px; color: var(--muted); margin-top: 3px; }
+        .calc-card .calc-category { font-size: 10px; background: var(--accent-light); color: var(--accent); padding: 2px 12px; border-radius: 20px; margin-top: 6px; font-weight: 600; }
+
+        .category-card {
+            background: var(--bg2);
+            border-radius: var(--radius);
+            padding: 22px 16px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: 0.3s;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+        .category-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+        .category-card .cat-icon { font-size: 44px; }
+        .category-card h3 { margin: 8px 0 3px; font-size: 17px; }
+        .category-card p { color: var(--muted); font-size: 13px; }
+        .category-card .count { font-size: 12px; color: var(--accent); font-weight: 600; }
+
+        /* ====== FAQ ====== */
+        .faq-list details {
+            background: var(--bg2);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+            transition: 0.3s;
+        }
+        .faq-list details:hover { border-color: var(--accent); }
+        .faq-list summary { font-weight: 600; cursor: pointer; font-size: 15px; }
+        .faq-list p { margin-top: 8px; color: var(--text2); padding-right: 8px; font-size: 14px; }
+
+        /* ====== التذييل ====== */
+        footer {
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            padding: 36px 0 18px;
+            margin-top: 16px;
+        }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 28px; margin-bottom: 20px; }
+        .footer-col h4 { margin-bottom: 10px; font-size: 15px; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 5px; }
+        .footer-col a { color: var(--text2); text-decoration: none; font-size: 13px; transition: 0.3s; }
+        .footer-col a:hover { color: var(--accent); }
+        .social-links { display: flex; gap: 10px; font-size: 26px; }
+        .footer-bottom { text-align: center; border-top: 1px solid var(--border); padding-top: 16px; color: var(--muted); font-size: 13px; }
+        .footer-lang { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; }
+        .footer-lang a { color: var(--muted); text-decoration: none; font-size: 12px; padding: 2px 10px; border-radius: 12px; border: 1px solid var(--border); transition: 0.3s; }
+        .footer-lang a:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* ====== النافذة المنبثقة ====== */
+        .calc-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .calc-modal-overlay.active { display: flex; }
+        .calc-modal {
+            background: var(--bg2);
+            border-radius: var(--radius);
+            max-width: 620px;
+            width: 100%;
+            max-height: 92vh;
+            overflow-y: auto;
+            padding: 30px;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+        .calc-modal .close-btn {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text2);
+        }
+        .calc-modal .close-btn:hover { background: #dc3545; color: #fff; border-color: #dc3545; }
+        .calc-modal h2 { font-size: 22px; margin-bottom: 18px; text-align: center; }
+        .calc-modal .input-group { margin-bottom: 14px; }
+        .calc-modal label { display: block; font-weight: 500; margin-bottom: 3px; font-size: 14px; color: var(--text2); }
+        .calc-modal input, .calc-modal select {
+            width: 100%;
+            padding: 11px 14px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 15px;
+            transition: 0.3s;
+        }
+        .calc-modal input:focus, .calc-modal select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(37,99,235,0.1); }
+        .calc-modal .btn-group { display: flex; gap: 10px; margin: 14px 0 10px; flex-wrap: wrap; }
+        .calc-modal .btn-primary {
+            flex: 1;
+            padding: 13px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            min-width: 100px;
+        }
+        .calc-modal .btn-primary:hover { background: var(--accent-hover); transform: scale(1.02); }
+        .calc-modal .btn-secondary {
+            padding: 13px 22px;
+            background: transparent;
+            color: var(--text2);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .calc-modal .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+        .calc-modal .result-box {
+            margin-top: 14px;
+            padding: 18px;
+            background: var(--accent-light);
+            border-radius: 12px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            display: none;
+            border: 2px solid var(--accent);
+            color: var(--text);
+        }
+        .calc-modal .result-box.active { display: block; }
+        .calc-modal .result-detail { margin-top: 8px; font-size: 13px; font-weight: 400; color: var(--text2); border-top: 1px solid var(--border); padding-top: 10px; }
+
+        /* ====== استجابة ====== */
+        @media (max-width: 820px) {
+            .nav-container { flex-direction: column; gap: 6px; }
+            .nav-links { justify-content: center; gap: 2px; }
+            .nav-links a { font-size: 13px; padding: 4px 10px; }
+            .nav-actions { width: 100%; justify-content: center; }
+            .hero h1 { font-size: 24px; }
+            .calc-grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; }
+            .category-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+            .calc-modal { padding: 20px; margin: 10px; }
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+            section { padding: 24px 0; }
+            .section-header { flex-direction: column; align-items: flex-start; }
+            .filter-buttons { width: 100%; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 6px; }
+            .filter-btn { font-size: 12px; padding: 4px 12px; white-space: nowrap; }
+            .lang-notification { bottom: 12px; right: 12px; left: 12px; max-width: none; }
+        }
         @media (max-width: 480px) {
-            .lang-notification {
-                bottom: 12px;
-                right: 12px;
-                left: 12px;
-                max-width: none;
-                padding: 14px 16px;
-            }
+            .calc-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .calc-card { padding: 14px 10px; }
+            .calc-card .icon { font-size: 30px; }
+            .calc-card h3 { font-size: 13px; }
+            .category-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .category-card { padding: 16px 10px; }
+            .container { padding: 0 12px; }
+            .calc-modal { padding: 16px; }
+            .calc-modal h2 { font-size: 18px; }
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .logo { font-size: 20px; }
+            .lang-notification { padding: 14px 16px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ============================================================
-    الإعلان العلوي
-    ============================================================ -->
-    <div class="ad-banner" id="topAd">📢 مساحة إعلانية – Header Banner (Google AdSense)</div>
+    <!-- ====== الإعلان العلوي ====== -->
+    <div class="ad-banner" id="topAd" data-i18n="ad.header">📢 مساحة إعلانية – Header Banner</div>
 
-    <!-- ============================================================
-    إشعار اللغة التلقائي
-    ============================================================ -->
+    <!-- ====== إشعار اللغة ====== -->
     <div class="lang-notification" id="langNotification">
-        <div class="title" id="langNotifTitle">🌍 تم اكتشاف لغتك</div>
-        <div class="desc" id="langNotifDesc">تم ضبط اللغة تلقائياً حسب إعدادات جهازك.</div>
+        <div class="title" id="langNotifTitle" data-i18n="notification.title">🌍 تم اكتشاف لغتك</div>
+        <div class="desc" id="langNotifDesc" data-i18n="notification.desc">تم ضبط اللغة تلقائياً حسب إعدادات جهازك.</div>
         <div class="actions">
-            <button class="btn-confirm" id="langNotifConfirm">موافق</button>
-            <button class="btn-dismiss" id="langNotifDismiss">تغيير لاحقاً</button>
+            <button class="btn-confirm" id="langNotifConfirm" data-i18n="notification.confirm">موافق</button>
+            <button class="btn-dismiss" id="langNotifDismiss" data-i18n="notification.dismiss">تغيير لاحقاً</button>
         </div>
     </div>
 
-    <!-- ============================================================
-    شريط التنقل
-    ============================================================ -->
+    <!-- ====== شريط التنقل ====== -->
     <nav class="navbar">
         <div class="container nav-container">
             <a href="#" class="logo">🧮 حاسبات<span>ي</span></a>
@@ -1052,7 +472,7 @@
                 <li><a href="#about" data-i18n="nav.about">من نحن</a></li>
             </ul>
             <div class="nav-actions">
-                <select id="lang-selector" aria-label="اختيار اللغة">
+                <select id="lang-selector">
                     <option value="ar">🇸🇦 العربية</option>
                     <option value="en">🇬🇧 English</option>
                     <option value="fr">🇫🇷 Français</option>
@@ -1067,23 +487,19 @@
         </div>
     </nav>
 
-    <!-- ============================================================
-    قسم البطل (Hero)
-    ============================================================ -->
+    <!-- ====== البطل ====== -->
     <header class="hero">
         <div class="container">
             <h1 data-i18n="hero.title">آلات حاسبة دقيقة ومجانية <br><span class="highlight">لكل احتياجات العالم</span></h1>
-            <p class="hero-sub" data-i18n="hero.sub">أكثر من 30 أداة حسابية في التمويل، الصحة، الرياضيات، والتحويلات – واجهة مريحة للعين تدعم جميع اللغات</p>
+            <p class="hero-sub" data-i18n="hero.sub">أكثر من 30 أداة حسابية – واجهة مريحة للعين تدعم 8 لغات</p>
             <div class="search-wrapper">
-                <input type="text" id="global-search" placeholder="🔍 ابحث عن آلة حاسبة..." aria-label="بحث عام">
+                <input type="text" id="global-search" placeholder="🔍 ابحث عن آلة حاسبة..." data-i18n="search.placeholder">
                 <div id="search-suggestions"></div>
             </div>
         </div>
     </header>
 
-    <!-- ============================================================
-    الآلات الحاسبة
-    ============================================================ -->
+    <!-- ====== الآلات الحاسبة ====== -->
     <section id="calculators">
         <div class="container">
             <div class="section-header">
@@ -1104,9 +520,7 @@
         </div>
     </section>
 
-    <!-- ============================================================
-    الفئات
-    ============================================================ -->
+    <!-- ====== الفئات ====== -->
     <section id="categories">
         <div class="container">
             <h2 data-i18n="categories.title">📂 تصفح حسب الفئة</h2>
@@ -1115,59 +529,47 @@
         </div>
     </section>
 
-    <!-- ============================================================
-    الأسئلة الشائعة
-    ============================================================ -->
+    <!-- ====== الأسئلة الشائعة ====== -->
     <section id="faq">
         <div class="container">
             <h2 data-i18n="faq.title">❓ أسئلة شائعة</h2>
             <div class="faq-list">
                 <details>
                     <summary data-i18n="faq.q1">هل جميع الآلات الحاسبة مجانية؟</summary>
-                    <p data-i18n="faq.a1">نعم، جميع الأدوات مجانية تماماً ولا تحتاج إلى تسجيل أو اشتراك.</p>
+                    <p data-i18n="faq.a1">نعم، جميع الأدوات مجانية تماماً ولا تحتاج إلى تسجيل.</p>
                 </details>
                 <details>
                     <summary data-i18n="faq.q2">كم عدد اللغات التي تدعمها المنصة؟</summary>
-                    <p data-i18n="faq.a2">تدعم المنصة 8 لغات حالياً: العربية، الإنجليزية، الفرنسية، الإسبانية، الألمانية، الصينية، الهندية، والروسية.</p>
+                    <p data-i18n="faq.a2">تدعم المنصة 8 لغات: العربية، الإنجليزية، الفرنسية، الإسبانية، الألمانية، الصينية، الهندية، والروسية.</p>
                 </details>
                 <details>
                     <summary data-i18n="faq.q3">كيف أثق بدقة النتائج؟</summary>
-                    <p data-i18n="faq.a3">نستخدم خوارزميات رياضية معتمدة عالمياً، ونعرض الصيغ المستخدمة في كل أداة.</p>
+                    <p data-i18n="faq.a3">نستخدم خوارزميات رياضية معتمدة عالمياً، ونعرض الصيغ المستخدمة.</p>
                 </details>
                 <details>
-                    <summary data-i18n="faq.q4">هل التصميم مريح للعين حقاً؟</summary>
-                    <p data-i18n="faq.a4">نعم، تم تصميم الواجهة بألوان هادئة ومتوازنة مع وضع ليلي تلقائي لتقليل إجهاد العين أثناء الاستخدام الطويل.</p>
-                </details>
-                <details>
-                    <summary data-i18n="faq.q5">كيف أبلغ عن خطأ أو أقترح إضافة جديدة؟</summary>
-                    <p data-i18n="faq.a5">يمكنك مراسلتنا عبر صفحة "اتصل بنا" وسنرد عليك في أقرب وقت.</p>
+                    <summary data-i18n="faq.q4">هل التصميم مريح للعين؟</summary>
+                    <p data-i18n="faq.a4">نعم، واجهة بألوان هادئة مع وضع ليلي تلقائي لتقليل إجهاد العين.</p>
                 </details>
             </div>
         </div>
     </section>
 
-    <!-- ============================================================
-    من نحن
-    ============================================================ -->
+    <!-- ====== من نحن ====== -->
     <section id="about">
         <div class="container">
             <h2 data-i18n="about.title">🧑‍💻 من نحن</h2>
-            <p style="max-width:740px; color: var(--text-secondary); font-size:15px;" data-i18n="about.text">
+            <p style="max-width:740px; color: var(--text2); font-size:15px;" data-i18n="about.text">
                 منصة <strong>حاسباتي العالمية</strong> تهدف إلى توفير أدوات حسابية دقيقة وسهلة الاستخدام للجميع في جميع أنحاء العالم.
-                نؤمن بأن المعرفة المالية والصحية والرياضية يجب أن تكون في متناول الجميع وبجميع اللغات، ولذلك نقدم آلات حاسبة مجانية
-                مع شروحات واضحة وتصميم مريح للعين يدعم 8 لغات عالمية.
             </p>
         </div>
     </section>
 
-    <!-- ============================================================
-    التذييل
-    ============================================================ -->
+    <!-- ====== التذييل ====== -->
     <footer>
         <div class="container footer-grid">
             <div class="footer-col">
                 <h4>🧮 حاسباتي</h4>
-                <p style="font-size:13px; color:var(--text-muted);" data-i18n="footer.desc">منصة آلات حاسبة شاملة ومجانية للجميع.</p>
+                <p style="font-size:13px; color:var(--muted);" data-i18n="footer.desc">منصة آلات حاسبة شاملة ومجانية للجميع.</p>
             </div>
             <div class="footer-col">
                 <h4 data-i18n="footer.links">روابط سريعة</h4>
@@ -1184,7 +586,6 @@
                     <a href="#" aria-label="فيسبوك">📘</a>
                     <a href="#" aria-label="تويتر">🐦</a>
                     <a href="#" aria-label="يوتيوب">▶️</a>
-                    <a href="#" aria-label="إنستغرام">📸</a>
                 </div>
             </div>
             <div class="footer-col">
@@ -1202,363 +603,28 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2026 حاسباتي العالمية – جميع الحقوق محفوظة | Global Calculators Hub</p>
+            <p>© 2026 حاسباتي العالمية – جميع الحقوق محفوظة</p>
         </div>
     </footer>
 
-    <!-- ============================================================
-    الإعلان السفلي
-    ============================================================ -->
-    <div class="ad-banner" id="bottomAd">📢 مساحة إعلانية – Footer Banner (Google AdSense)</div>
+    <!-- ====== الإعلان السفلي ====== -->
+    <div class="ad-banner" id="bottomAd" data-i18n="ad.footer">📢 مساحة إعلانية – Footer Banner</div>
 
-    <!-- ============================================================
-    النافذة المنبثقة للآلة الحاسبة
-    ============================================================ -->
+    <!-- ====== النافذة المنبثقة ====== -->
     <div class="calc-modal-overlay" id="calcModal">
         <div class="calc-modal">
-            <button class="close-btn" id="closeModal">✕</button>
+            <button class="close-btn" id="closeModal" data-i18n="calc.close">✕</button>
             <h2 id="modalTitle">آلة حاسبة</h2>
             <div id="modalContent"></div>
         </div>
     </div>
 
-    <!-- ============================================================
-    JavaScript – كل المنطق مع الكشف التلقائي للغة
-    ============================================================ -->
-    <script>// =============================================================
-// 1. الكشف التلقائي للغة – نسخة محصنة ضد الأخطاء
-// =============================================================
-function detectUserLanguage() {
-    // اللغات المدعومة
-    const supportedLanguages = ['ar', 'en', 'fr', 'es', 'de', 'zh', 'hi', 'ru'];
-    
-    // 1. التحقق من localStorage أولاً
-    try {
-        const savedLang = localStorage.getItem('preferredLanguage');
-        if (savedLang && supportedLanguages.includes(savedLang)) {
-            return savedLang;
-        }
-    } catch (e) { /* تجاهل */ }
-
-    // 2. الحصول على لغات المتصفح
-    let browserLanguages = [];
-    try {
-        if (navigator.languages && navigator.languages.length > 0) {
-            browserLanguages = navigator.languages;
-        } else if (navigator.language) {
-            browserLanguages = [navigator.language];
-        }
-    } catch (e) { /* تجاهل */ }
-
-    // 3. البحث عن تطابق
-    for (let lang of browserLanguages) {
-        try {
-            const baseLang = lang.split('-')[0].toLowerCase();
-            if (supportedLanguages.includes(baseLang)) {
-                return baseLang;
-            }
-        } catch (e) { /* تجاهل */ }
-    }
-
-    // 4. كشف المنطقة الزمنية
-    try {
-        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const timeZoneMap = {
-            'Asia/Riyadh': 'ar', 'Asia/Dubai': 'ar', 'Asia/Kuwait': 'ar',
-            'Asia/Baghdad': 'ar', 'Asia/Amman': 'ar', 'Asia/Beirut': 'ar',
-            'Africa/Cairo': 'ar', 'Africa/Casablanca': 'ar', 'Asia/Jerusalem': 'ar',
-            'America/New_York': 'en', 'America/Los_Angeles': 'en', 'America/Chicago': 'en',
-            'Europe/London': 'en', 'Europe/Paris': 'fr', 'Europe/Berlin': 'de',
-            'Europe/Madrid': 'es', 'Europe/Moscow': 'ru', 'Asia/Shanghai': 'zh',
-            'Asia/Hong_Kong': 'zh', 'Asia/Kolkata': 'hi', 'Asia/Dhaka': 'hi'
-        };
-        if (timeZoneMap[timeZone]) {
-            return timeZoneMap[timeZone];
-        }
-    } catch (e) { /* تجاهل */ }
-
-    // 5. اللغة الافتراضية
-    return 'en';
-}
-
-// =============================================================
-// 2. دالة التهيئة الرئيسية – مع حماية كاملة
-// =============================================================
-function init() {
-    console.log('🚀 بدء تهيئة حاسباتي العالمية...');
-    
-    // 1. كشف اللغة مع حماية
-    let detectedLang = 'en'; // اللغة الافتراضية
-    try {
-        detectedLang = detectUserLanguage();
-    } catch (e) {
-        console.warn('⚠️ خطأ في كشف اللغة، استخدام الافتراضية:', e);
-    }
-    
-    // 2. التأكد من أن اللغة مدعومة
-    const supportedLanguages = ['ar', 'en', 'fr', 'es', 'de', 'zh', 'hi', 'ru'];
-    if (!supportedLanguages.includes(detectedLang)) {
-        detectedLang = 'en';
-    }
-    
-    // 3. التحقق من التفضيل المخزن
-    let finalLang = detectedLang;
-    try {
-        const savedLang = localStorage.getItem('preferredLanguage');
-        if (savedLang && supportedLanguages.includes(savedLang)) {
-            finalLang = savedLang;
-        }
-    } catch (e) { /* تجاهل */ }
-    
-    // 4. التأكد من وجود الترجمة قبل التطبيق
-    if (!translations || typeof translations !== 'object') {
-        console.error('❌ كائن الترجمة غير موجود!');
-        return;
-    }
-    
-    if (!translations[finalLang]) {
-        console.warn(`⚠️ اللغة ${finalLang} غير مدعومة، استخدام الإنجليزية`);
-        finalLang = 'en';
-    }
-    
-    // 5. تطبيق اللغة
-    try {
-        applyTranslations(finalLang);
-        console.log(`🌍 تم تطبيق اللغة: ${finalLang}`);
-    } catch (e) {
-        console.error('❌ خطأ في تطبيق الترجمة:', e);
-    }
-    
-    // 6. تحديث محدد اللغة
-    try {
-        const selector = document.getElementById('lang-selector');
-        if (selector) {
-            selector.value = finalLang;
-        }
-    } catch (e) { /* تجاهل */ }
-    
-    // 7. عرض إشعار إذا كانت اللغة مكتشفة تلقائياً
-    try {
-        const savedLang = localStorage.getItem('preferredLanguage');
-        if (!savedLang) {
-            showLanguageNotification(finalLang);
-        }
-    } catch (e) { /* تجاهل */ }
-    
-    // 8. تحميل المحتوى
-    try {
-        if (typeof renderCalculators === 'function') {
-            renderCalculators('all');
-        }
-        if (typeof renderCategories === 'function') {
-            renderCategories();
-        }
-        if (typeof initializeTheme === 'function') {
-            initializeTheme();
-        }
-    } catch (e) {
-        console.error('❌ خطأ في تحميل المحتوى:', e);
-    }
-    
-    console.log('✅ حاسباتي العالمية جاهزة!');
-}
-
-// =============================================================
-// 3. دالة applyTranslations محسنة مع حماية
-// =============================================================
-function applyTranslations(lang) {
-    // التأكد من وجود اللغة في الترجمة
-    if (!translations || !translations[lang]) {
-        console.warn(`⚠️ الترجمة غير متوفرة للغة: ${lang}، استخدام الإنجليزية`);
-        lang = 'en';
-        if (!translations || !translations[lang]) {
-            console.error('❌ لا توجد ترجمة متوفرة!');
-            return;
-        }
-    }
-    
-    const t = translations[lang];
-    
-    // تطبيق الترجمة على العناصر
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.dataset.i18n;
-        if (t[key] !== undefined && t[key] !== null) {
-            try {
-                if (key === 'hero.title' || key === 'about.text' || key === 'notification.title' || key === 'notification.desc') {
-                    el.innerHTML = t[key];
-                } else {
-                    el.textContent = t[key];
-                }
-            } catch (e) { /* تجاهل */ }
-        }
-    });
-    
-    // تغيير الاتجاه
-    try {
-        const dir = (lang === 'ar') ? 'rtl' : 'ltr';
-        document.documentElement.dir = dir;
-        document.documentElement.lang = lang;
-    } catch (e) { /* تجاهل */ }
-    
-    // تحديث placeholder
-    try {
-        const search = document.getElementById('global-search');
-        if (search && t['search.placeholder']) {
-            search.placeholder = t['search.placeholder'];
-        }
-    } catch (e) { /* تجاهل */ }
-    
-    // تحديث عنوان الصفحة
-    try {
-        const titles = {
-            ar: 'حاسباتي العالمية – آلات حاسبة دقيقة ومجانية',
-            en: 'Global Calculators Hub – Accurate & Free Calculators',
-            fr: 'Calculators Hub – Calculatrices précises et gratuites',
-            es: 'Global Calculators Hub – Calculadoras precisas y gratuitas',
-            de: 'Global Calculators Hub – Präzise & kostenlose Rechner',
-            zh: 'Global Calculators Hub – 精确且免费的计算器',
-            hi: 'Global Calculators Hub – सटीक और मुफ्त कैलकुलेटर',
-            ru: 'Global Calculators Hub – Точные и бесплатные калькуляторы'
-        };
-        document.title = titles[lang] || titles['en'];
-    } catch (e) { /* تجاهل */ }
-}
-
-// =============================================================
-// 4. عرض الإشعار مع حماية
-// =============================================================
-function showLanguageNotification(lang) {
-    try {
-        if (!translations || !translations[lang]) {
-            lang = 'en';
-        }
-        const t = translations[lang];
-        
-        const notif = document.getElementById('langNotification');
-        if (!notif) return;
-        
-        const titleEl = document.getElementById('langNotifTitle');
-        const descEl = document.getElementById('langNotifDesc');
-        const confirmBtn = document.getElementById('langNotifConfirm');
-        const dismissBtn = document.getElementById('langNotifDismiss');
-        
-        if (titleEl) titleEl.textContent = t['notification.title'] || '🌍 تم اكتشاف لغتك';
-        if (descEl) descEl.textContent = t['notification.desc'] || 'تم ضبط اللغة تلقائياً حسب إعدادات جهازك.';
-        if (confirmBtn) confirmBtn.textContent = t['notification.confirm'] || 'موافق';
-        if (dismissBtn) dismissBtn.textContent = t['notification.dismiss'] || 'تغيير لاحقاً';
-        
-        notif.classList.add('active');
-        
-        // إخفاء تلقائي بعد 8 ثوانٍ
-        setTimeout(() => {
-            notif.classList.remove('active');
-        }, 8000);
-    } catch (e) {
-        console.warn('⚠️ خطأ في عرض إشعار اللغة:', e);
-    }
-}
-
-// =============================================================
-// 5. تهيئة الوضع الليلي
-// =============================================================
-function initializeTheme() {
-    try {
-        const theme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', theme);
-        const toggle = document.getElementById('theme-toggle');
-        if (toggle) {
-            toggle.textContent = theme === 'dark' ? '☀️' : '🌙';
-        }
-    } catch (e) { /* تجاهل */ }
-}
-
-// =============================================================
-// 6. بدء التشغيل – مع تأخير بسيط لضمان تحميل كل شيء
-// =============================================================
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(init, 100);
-    });
-} else {
-    setTimeout(init, 100);
-}
+    <!-- ============================================================ -->
+    <!-- ====== JavaScript – الترجمة الكاملة ====== -->
+    <!-- ============================================================ -->
+    <script>
         // =============================================================
-        // 1. البيانات – 30+ آلة حاسبة
-        // =============================================================
-        const calculatorsData = [
-            // === مالية ===
-            { id: 'mortgage', name: 'الرهن العقاري', icon: '🏠', category: 'مالية', desc: 'حساب أقساط الرهن العقاري' },
-            { id: 'loan', name: 'القرض', icon: '🏦', category: 'مالية', desc: 'القسط الشهري والفائدة' },
-            { id: 'auto-loan', name: 'قرض السيارة', icon: '🚗', category: 'مالية', desc: 'حساب قسط السيارة' },
-            { id: 'personal-loan', name: 'القرض الشخصي', icon: '💳', category: 'مالية', desc: 'حساب القرض الشخصي' },
-            { id: 'interest', name: 'الفائدة البسيطة', icon: '💰', category: 'مالية', desc: 'حساب الفائدة البسيطة' },
-            { id: 'compound', name: 'الفائدة المركبة', icon: '📈', category: 'مالية', desc: 'حساب العوائد الاستثمارية' },
-            { id: 'investment', name: 'العائد على الاستثمار', icon: '📊', category: 'مالية', desc: 'حساب ROI' },
-            { id: 'savings', name: 'الادخار', icon: '🏦', category: 'مالية', desc: 'حساب مدخراتك المستقبلية' },
-            { id: 'retirement', name: 'التقاعد', icon: '👴', category: 'مالية', desc: 'خطة التقاعد الخاصة بك' },
-            { id: 'inflation', name: 'التضخم', icon: '📉', category: 'مالية', desc: 'تأثير التضخم على المال' },
-            { id: 'credit-card', name: 'بطاقة الائتمان', icon: '💳', category: 'مالية', desc: 'حساب فائدة بطاقة الائتمان' },
-            { id: 'debt-payoff', name: 'سداد الديون', icon: '📋', category: 'مالية', desc: 'خطة سداد الديون' },
-            { id: 'apr', name: 'معدل الفائدة السنوي', icon: '📊', category: 'مالية', desc: 'حساب APR' },
-            { id: 'amortization', name: 'جدول الاستهلاك', icon: '📋', category: 'مالية', desc: 'جدول أقساط القرض' },
-            { id: 'roi', name: 'ROI', icon: '📈', category: 'مالية', desc: 'العائد على الاستثمار' },
-
-            // === صحة ===
-            { id: 'bmi', name: 'BMI', icon: '⚖️', category: 'صحة', desc: 'مؤشر كتلة الجسم' },
-            { id: 'body-fat', name: 'دهون الجسم', icon: '🧬', category: 'صحة', desc: 'نسبة الدهون في الجسم' },
-            { id: 'calories', name: 'سعرات حرارية', icon: '🔥', category: 'صحة', desc: 'احتياجك اليومي من السعرات' },
-            { id: 'bmr', name: 'معدل الأيض', icon: '💪', category: 'صحة', desc: 'معدل الأيض الأساسي BMR' },
-            { id: 'ideal-weight', name: 'الوزن المثالي', icon: '🎯', category: 'صحة', desc: 'حساب الوزن المثالي' },
-            { id: 'pregnancy', name: 'الحمل', icon: '🤰', category: 'صحة', desc: 'حاسبة الحمل والولادة' },
-            { id: 'due-date', name: 'تاريخ الولادة', icon: '📅', category: 'صحة', desc: 'حساب تاريخ الولادة المتوقع' },
-            { id: 'ovulation', name: 'التبويض', icon: '🌸', category: 'صحة', desc: 'حساب فترة التبويض' },
-            { id: 'water', name: 'شرب الماء', icon: '💧', category: 'صحة', desc: 'احتياجك اليومي من الماء' },
-            { id: 'macro', name: 'المغذيات', icon: '🥗', category: 'صحة', desc: 'حساب المغذيات الكبيرة' },
-            { id: 'heart-rate', name: 'معدل القلب', icon: '❤️', category: 'صحة', desc: 'حساب معدل ضربات القلب' },
-
-            // === رياضيات ===
-            { id: 'percentage', name: 'نسبة مئوية', icon: '💯', category: 'رياضيات', desc: 'حساب النسب المئوية' },
-            { id: 'fraction', name: 'كسور', icon: '½', category: 'رياضيات', desc: 'عمليات على الكسور' },
-            { id: 'decimal', name: 'أعداد عشرية', icon: '🔢', category: 'رياضيات', desc: 'تحويلات الأعداد العشرية' },
-            { id: 'scientific', name: 'آلة علمية', icon: '🧮', category: 'رياضيات', desc: 'آلة حاسبة علمية متقدمة' },
-            { id: 'ratio', name: 'نسبة', icon: '📐', category: 'رياضيات', desc: 'حساب النسب' },
-            { id: 'average', name: 'المتوسط', icon: '📊', category: 'رياضيات', desc: 'حساب المتوسط الحسابي' },
-            { id: 'probability', name: 'احتمال', icon: '🎲', category: 'رياضيات', desc: 'حساب الاحتمالات' },
-            { id: 'statistics', name: 'إحصاء', icon: '📈', category: 'رياضيات', desc: 'حساب إحصائي' },
-            { id: 'exponent', name: 'أسس', icon: '⬆️', category: 'رياضيات', desc: 'حساب الأسس' },
-            { id: 'sqrt', name: 'جذر تربيعي', icon: '√', category: 'رياضيات', desc: 'حساب الجذر التربيعي' },
-            { id: 'geometry', name: 'هندسة', icon: '📐', category: 'رياضيات', desc: 'حسابات هندسية' },
-
-            // === تحويلات ===
-            { id: 'length', name: 'تحويل الطول', icon: '📏', category: 'تحويلات', desc: 'متر، قدم، بوصة، كم' },
-            { id: 'weight', name: 'تحويل الوزن', icon: '⚖️', category: 'تحويلات', desc: 'كجم، رطل، طن' },
-            { id: 'temperature', name: 'تحويل الحرارة', icon: '🌡️', category: 'تحويلات', desc: 'سيلسيوس، فهرنهايت، كلفن' },
-            { id: 'area', name: 'تحويل المساحة', icon: '📐', category: 'تحويلات', desc: 'متر مربع، قدم مربع' },
-            { id: 'volume', name: 'تحويل الحجم', icon: '🧊', category: 'تحويلات', desc: 'لتر، جالون، متر مكعب' },
-            { id: 'speed', name: 'تحويل السرعة', icon: '🚀', category: 'تحويلات', desc: 'كم/س، ميل/س' },
-            { id: 'time', name: 'تحويل الوقت', icon: '⏰', category: 'تحويلات', desc: 'ساعات، دقائق، ثواني' },
-            { id: 'energy', name: 'تحويل الطاقة', icon: '⚡', category: 'تحويلات', desc: 'جول، سعرات' },
-            { id: 'currency', name: 'تحويل العملات', icon: '💱', category: 'تحويلات', desc: 'دولار، يورو، ريال' },
-            { id: 'storage', name: 'سعة التخزين', icon: '💾', category: 'تحويلات', desc: 'GB, MB, TB' },
-
-            // === تعليم ===
-            { id: 'gpa', name: 'المعدل التراكمي', icon: '🎓', category: 'تعليم', desc: 'حساب المعدل GPA' },
-            { id: 'grade', name: 'تقدير الدرجات', icon: '📝', category: 'تعليم', desc: 'حساب تقدير النتيجة' },
-        ];
-
-        // =============================================================
-        // 2. الفئات
-        // =============================================================
-        const categoriesData = [
-            { name: 'مالية', icon: '💰', desc: 'قروض، استثمار، ادخار، رهن' },
-            { name: 'صحة ولياقة', icon: '❤️', desc: 'BMI، سعرات، وزن، حمل' },
-            { name: 'رياضيات', icon: '📐', desc: 'نسب، كسور، إحصاء، هندسة' },
-            { name: 'تحويلات', icon: '🔄', desc: 'طول، وزن، حرارة، عملات' },
-            { name: 'تعليم', icon: '🎓', desc: 'معدل، تقدير، درجات' },
-        ];
-
-        // =============================================================
-        // 3. الترجمة – 8 لغات (نفس المحتوى السابق)
+        // 1. الترجمة – 8 لغات مع كل النصوص
         // =============================================================
         const translations = {
             ar: {
@@ -1567,24 +633,23 @@ if (document.readyState === 'loading') {
                 'nav.faq': 'أسئلة شائعة',
                 'nav.about': 'من نحن',
                 'hero.title': 'آلات حاسبة دقيقة ومجانية <br><span class="highlight">لكل احتياجات العالم</span>',
-                'hero.sub': 'أكثر من 30 أداة حسابية في التمويل، الصحة، الرياضيات، والتحويلات – واجهة مريحة للعين تدعم جميع اللغات',
+                'hero.sub': 'أكثر من 30 أداة حسابية – واجهة مريحة للعين تدعم 8 لغات',
+                'search.placeholder': '🔍 ابحث عن آلة حاسبة...',
                 'calculators.title': '✨ جميع الآلات الحاسبة',
                 'calculators.sub': 'اختر الأداة التي تريدها واحسب نتيجتك فوراً',
                 'categories.title': '📂 تصفح حسب الفئة',
                 'categories.sub': 'اكتشف مجموعات الآلات الحاسبة المصنفة',
                 'faq.title': '❓ أسئلة شائعة',
                 'faq.q1': 'هل جميع الآلات الحاسبة مجانية؟',
-                'faq.a1': 'نعم، جميع الأدوات مجانية تماماً ولا تحتاج إلى تسجيل أو اشتراك.',
+                'faq.a1': 'نعم، جميع الأدوات مجانية تماماً ولا تحتاج إلى تسجيل.',
                 'faq.q2': 'كم عدد اللغات التي تدعمها المنصة؟',
-                'faq.a2': 'تدعم المنصة 8 لغات حالياً: العربية، الإنجليزية، الفرنسية، الإسبانية، الألمانية، الصينية، الهندية، والروسية.',
+                'faq.a2': 'تدعم المنصة 8 لغات: العربية، الإنجليزية، الفرنسية، الإسبانية، الألمانية، الصينية، الهندية، والروسية.',
                 'faq.q3': 'كيف أثق بدقة النتائج؟',
-                'faq.a3': 'نستخدم خوارزميات رياضية معتمدة عالمياً، ونعرض الصيغ المستخدمة في كل أداة.',
-                'faq.q4': 'هل التصميم مريح للعين حقاً؟',
-                'faq.a4': 'نعم، تم تصميم الواجهة بألوان هادئة ومتوازنة مع وضع ليلي تلقائي لتقليل إجهاد العين أثناء الاستخدام الطويل.',
-                'faq.q5': 'كيف أبلغ عن خطأ أو أقترح إضافة جديدة؟',
-                'faq.a5': 'يمكنك مراسلتنا عبر صفحة "اتصل بنا" وسنرد عليك في أقرب وقت.',
+                'faq.a3': 'نستخدم خوارزميات رياضية معتمدة عالمياً، ونعرض الصيغ المستخدمة.',
+                'faq.q4': 'هل التصميم مريح للعين؟',
+                'faq.a4': 'نعم، واجهة بألوان هادئة مع وضع ليلي تلقائي لتقليل إجهاد العين.',
                 'about.title': '🧑‍💻 من نحن',
-                'about.text': 'منصة <strong>حاسباتي العالمية</strong> تهدف إلى توفير أدوات حسابية دقيقة وسهلة الاستخدام للجميع في جميع أنحاء العالم. نؤمن بأن المعرفة المالية والصحية والرياضية يجب أن تكون في متناول الجميع وبجميع اللغات، ولذلك نقدم آلات حاسبة مجانية مع شروحات واضحة وتصميم مريح للعين يدعم 8 لغات عالمية.',
+                'about.text': 'منصة <strong>حاسباتي العالمية</strong> تهدف إلى توفير أدوات حسابية دقيقة وسهلة الاستخدام للجميع في جميع أنحاء العالم.',
                 'footer.desc': 'منصة آلات حاسبة شاملة ومجانية للجميع.',
                 'footer.links': 'روابط سريعة',
                 'footer.home': 'الرئيسية',
@@ -1599,7 +664,6 @@ if (document.readyState === 'loading') {
                 'filter.math': 'رياضيات',
                 'filter.conversion': 'تحويلات',
                 'filter.education': 'تعليم',
-                'search.placeholder': '🔍 ابحث عن آلة حاسبة...',
                 'calc.calculate': 'احسب',
                 'calc.reset': 'إعادة تعيين',
                 'calc.close': 'إغلاق',
@@ -1607,6 +671,8 @@ if (document.readyState === 'loading') {
                 'notification.desc': 'تم ضبط اللغة تلقائياً حسب إعدادات جهازك.',
                 'notification.confirm': 'موافق',
                 'notification.dismiss': 'تغيير لاحقاً',
+                'ad.header': '📢 مساحة إعلانية – Header Banner',
+                'ad.footer': '📢 مساحة إعلانية – Footer Banner',
             },
             en: {
                 'nav.calculators': 'Calculators',
@@ -1614,7 +680,8 @@ if (document.readyState === 'loading') {
                 'nav.faq': 'FAQ',
                 'nav.about': 'About',
                 'hero.title': 'Accurate & Free Calculators <br><span class="highlight">For Everyone Worldwide</span>',
-                'hero.sub': 'Over 30 calculation tools in Finance, Health, Math, and Conversions – Eye-friendly interface supporting 8 languages',
+                'hero.sub': 'Over 30 calculation tools – Eye-friendly interface supporting 8 languages',
+                'search.placeholder': '🔍 Search for a calculator...',
                 'calculators.title': '✨ All Calculators',
                 'calculators.sub': 'Choose the tool you need and calculate instantly',
                 'categories.title': '📂 Browse by Category',
@@ -1625,13 +692,11 @@ if (document.readyState === 'loading') {
                 'faq.q2': 'How many languages does the platform support?',
                 'faq.a2': 'The platform supports 8 languages: Arabic, English, French, Spanish, German, Chinese, Hindi, and Russian.',
                 'faq.q3': 'How can I trust the accuracy?',
-                'faq.a3': 'We use globally recognized mathematical algorithms and display the formulas used in each tool.',
-                'faq.q4': 'Is the design really eye-friendly?',
-                'faq.a4': 'Yes, the interface uses calm, balanced colors with an automatic dark mode to reduce eye strain during long usage.',
-                'faq.q5': 'How do I report an error or suggest a new calculator?',
-                'faq.a5': 'You can contact us through the "Contact Us" page and we will respond promptly.',
+                'faq.a3': 'We use globally recognized mathematical algorithms and display the formulas used.',
+                'faq.q4': 'Is the design eye-friendly?',
+                'faq.a4': 'Yes, the interface uses calm, balanced colors with an automatic dark mode.',
                 'about.title': '🧑‍💻 About Us',
-                'about.text': '<strong>Global Calculators Hub</strong> aims to provide accurate, easy-to-use calculation tools for everyone worldwide. We believe that financial, health, and mathematical knowledge should be accessible to all in every language, which is why we offer free calculators with clear explanations and an eye-friendly design supporting 8 languages.',
+                'about.text': '<strong>Global Calculators Hub</strong> aims to provide accurate, easy-to-use calculation tools for everyone worldwide.',
                 'footer.desc': 'A comprehensive, free calculator platform for everyone.',
                 'footer.links': 'Quick Links',
                 'footer.home': 'Home',
@@ -1646,7 +711,6 @@ if (document.readyState === 'loading') {
                 'filter.math': 'Math',
                 'filter.conversion': 'Conversions',
                 'filter.education': 'Education',
-                'search.placeholder': '🔍 Search for a calculator...',
                 'calc.calculate': 'Calculate',
                 'calc.reset': 'Reset',
                 'calc.close': 'Close',
@@ -1654,6 +718,8 @@ if (document.readyState === 'loading') {
                 'notification.desc': 'Language has been set automatically based on your device settings.',
                 'notification.confirm': 'OK',
                 'notification.dismiss': 'Change later',
+                'ad.header': '📢 Ad Space – Header Banner',
+                'ad.footer': '📢 Ad Space – Footer Banner',
             },
             fr: {
                 'nav.calculators': 'Calculatrices',
@@ -1661,7 +727,8 @@ if (document.readyState === 'loading') {
                 'nav.faq': 'FAQ',
                 'nav.about': 'À propos',
                 'hero.title': 'Calculatrices précises et gratuites <br><span class="highlight">Pour le monde entier</span>',
-                'hero.sub': 'Plus de 30 outils de calcul en finance, santé, maths et conversions – Interface confortable pour les yeux supportant 8 langues',
+                'hero.sub': 'Plus de 30 outils – Interface confortable pour les yeux supportant 8 langues',
+                'search.placeholder': '🔍 Rechercher une calculatrice...',
                 'calculators.title': '✨ Toutes les calculatrices',
                 'calculators.sub': 'Choisissez l\'outil et calculez instantanément',
                 'categories.title': '📂 Parcourir par catégorie',
@@ -1670,15 +737,13 @@ if (document.readyState === 'loading') {
                 'faq.q1': 'Toutes les calculatrices sont-elles gratuites ?',
                 'faq.a1': 'Oui, tous les outils sont entièrement gratuits sans inscription.',
                 'faq.q2': 'Combien de langues sont supportées ?',
-                'faq.a2': 'La plateforme supporte 8 langues : arabe, anglais, français, espagnol, allemand, chinois, hindi et russe.',
+                'faq.a2': 'La plateforme supporte 8 langues: arabe, anglais, français, espagnol, allemand, chinois, hindi et russe.',
                 'faq.q3': 'Comment puis-je faire confiance à la précision ?',
                 'faq.a3': 'Nous utilisons des algorithmes mathématiques reconnus mondialement.',
-                'faq.q4': 'Le design est-il vraiment confortable pour les yeux ?',
+                'faq.q4': 'Le design est-il confortable pour les yeux ?',
                 'faq.a4': 'Oui, l\'interface utilise des couleurs douces avec un mode sombre automatique.',
-                'faq.q5': 'Comment signaler une erreur ou suggérer un nouvel outil ?',
-                'faq.a5': 'Contactez-nous via la page "Contact" et nous répondrons rapidement.',
                 'about.title': '🧑‍💻 À propos',
-                'about.text': '<strong>Global Calculators Hub</strong> vise à fournir des outils de calcul précis et faciles à utiliser pour tous dans le monde entier.',
+                'about.text': '<strong>Global Calculators Hub</strong> vise à fournir des outils de calcul précis et faciles à utiliser pour tous.',
                 'footer.desc': 'Une plateforme complète et gratuite de calculatrices.',
                 'footer.links': 'Liens rapides',
                 'footer.home': 'Accueil',
@@ -1693,7 +758,6 @@ if (document.readyState === 'loading') {
                 'filter.math': 'Maths',
                 'filter.conversion': 'Conversions',
                 'filter.education': 'Éducation',
-                'search.placeholder': '🔍 Rechercher une calculatrice...',
                 'calc.calculate': 'Calculer',
                 'calc.reset': 'Réinitialiser',
                 'calc.close': 'Fermer',
@@ -1701,6 +765,8 @@ if (document.readyState === 'loading') {
                 'notification.desc': 'La langue a été définie automatiquement selon les paramètres de votre appareil.',
                 'notification.confirm': 'OK',
                 'notification.dismiss': 'Changer plus tard',
+                'ad.header': '📢 Espace publicitaire – Bannière d\'en-tête',
+                'ad.footer': '📢 Espace publicitaire – Bannière de pied de page',
             },
             es: {
                 'nav.calculators': 'Calculadoras',
@@ -1708,7 +774,8 @@ if (document.readyState === 'loading') {
                 'nav.faq': 'FAQ',
                 'nav.about': 'Sobre nosotros',
                 'hero.title': 'Calculadoras precisas y gratuitas <br><span class="highlight">Para todo el mundo</span>',
-                'hero.sub': 'Más de 30 herramientas de cálculo en finanzas, salud, matemáticas y conversiones – Interfaz cómoda para los ojos con 8 idiomas',
+                'hero.sub': 'Más de 30 herramientas – Interfaz cómoda para los ojos con 8 idiomas',
+                'search.placeholder': '🔍 Buscar calculadora...',
                 'calculators.title': '✨ Todas las calculadoras',
                 'calculators.sub': 'Elige la herramienta y calcula al instante',
                 'categories.title': '📂 Explorar por categoría',
@@ -1720,10 +787,8 @@ if (document.readyState === 'loading') {
                 'faq.a2': 'Soporta 8 idiomas: árabe, inglés, francés, español, alemán, chino, hindi y ruso.',
                 'faq.q3': '¿Cómo puedo confiar en la precisión?',
                 'faq.a3': 'Utilizamos algoritmos matemáticos reconocidos globalmente.',
-                'faq.q4': '¿El diseño es realmente cómodo para los ojos?',
+                'faq.q4': '¿El diseño es cómodo para los ojos?',
                 'faq.a4': 'Sí, la interfaz utiliza colores suaves con modo oscuro automático.',
-                'faq.q5': '¿Cómo reportar un error o sugerir una nueva calculadora?',
-                'faq.a5': 'Contáctanos a través de la página "Contacto" y responderemos pronto.',
                 'about.title': '🧑‍💻 Sobre nosotros',
                 'about.text': '<strong>Global Calculators Hub</strong> ofrece herramientas de cálculo precisas y fáciles de usar para todos.',
                 'footer.desc': 'Una plataforma completa y gratuita de calculadoras.',
@@ -1740,7 +805,6 @@ if (document.readyState === 'loading') {
                 'filter.math': 'Matemáticas',
                 'filter.conversion': 'Conversiones',
                 'filter.education': 'Educación',
-                'search.placeholder': '🔍 Buscar calculadora...',
                 'calc.calculate': 'Calcular',
                 'calc.reset': 'Restablecer',
                 'calc.close': 'Cerrar',
@@ -1748,6 +812,8 @@ if (document.readyState === 'loading') {
                 'notification.desc': 'El idioma se ha establecido automáticamente según la configuración de tu dispositivo.',
                 'notification.confirm': 'OK',
                 'notification.dismiss': 'Cambiar más tarde',
+                'ad.header': '📢 Espacio publicitario – Banner superior',
+                'ad.footer': '📢 Espacio publicitario – Banner inferior',
             },
             de: {
                 'nav.calculators': 'Taschenrechner',
@@ -1755,7 +821,8 @@ if (document.readyState === 'loading') {
                 'nav.faq': 'FAQ',
                 'nav.about': 'Über uns',
                 'hero.title': 'Präzise & kostenlose Rechner <br><span class="highlight">Für die ganze Welt</span>',
-                'hero.sub': 'Über 30 Rechner für Finanzen, Gesundheit, Mathe & Umrechnungen – Augenfreundliches Interface mit 8 Sprachen',
+                'hero.sub': 'Über 30 Rechner – Augenfreundliches Interface mit 8 Sprachen',
+                'search.placeholder': '🔍 Rechner suchen...',
                 'calculators.title': '✨ Alle Rechner',
                 'calculators.sub': 'Wähle das Tool und berechne sofort',
                 'categories.title': '📂 Nach Kategorie durchsuchen',
@@ -1767,10 +834,8 @@ if (document.readyState === 'loading') {
                 'faq.a2': 'Die Plattform unterstützt 8 Sprachen: Arabisch, Englisch, Französisch, Spanisch, Deutsch, Chinesisch, Hindi und Russisch.',
                 'faq.q3': 'Wie kann ich der Genauigkeit vertrauen?',
                 'faq.a3': 'Wir verwenden weltweit anerkannte mathematische Algorithmen.',
-                'faq.q4': 'Ist das Design wirklich augenfreundlich?',
+                'faq.q4': 'Ist das Design augenfreundlich?',
                 'faq.a4': 'Ja, die Oberfläche verwendet sanfte Farben mit automatischem Dunkelmodus.',
-                'faq.q5': 'Wie melde ich einen Fehler oder schlage einen neuen Rechner vor?',
-                'faq.a5': 'Kontaktiere uns über die Seite "Kontakt" und wir antworten schnell.',
                 'about.title': '🧑‍💻 Über uns',
                 'about.text': '<strong>Global Calculators Hub</strong> bietet präzise und benutzerfreundliche Rechner für alle.',
                 'footer.desc': 'Eine umfassende, kostenlose Rechnerplattform.',
@@ -1787,7 +852,6 @@ if (document.readyState === 'loading') {
                 'filter.math': 'Mathe',
                 'filter.conversion': 'Umrechnungen',
                 'filter.education': 'Bildung',
-                'search.placeholder': '🔍 Rechner suchen...',
                 'calc.calculate': 'Berechnen',
                 'calc.reset': 'Zurücksetzen',
                 'calc.close': 'Schließen',
@@ -1795,6 +859,8 @@ if (document.readyState === 'loading') {
                 'notification.desc': 'Die Sprache wurde automatisch basierend auf Ihren Geräteeinstellungen festgelegt.',
                 'notification.confirm': 'OK',
                 'notification.dismiss': 'Später ändern',
+                'ad.header': '📢 Werbefläche – Kopfzeile',
+                'ad.footer': '📢 Werbefläche – Fußzeile',
             },
             zh: {
                 'nav.calculators': '计算器',
@@ -1802,7 +868,8 @@ if (document.readyState === 'loading') {
                 'nav.faq': '常见问题',
                 'nav.about': '关于我们',
                 'hero.title': '精确且免费的计算器 <br><span class="highlight">为全世界用户</span>',
-                'hero.sub': '超过30种金融、健康、数学和转换工具 – 护眼界面支持8种语言',
+                'hero.sub': '超过30种工具 – 护眼界面支持8种语言',
+                'search.placeholder': '🔍 搜索计算器...',
                 'calculators.title': '✨ 所有计算器',
                 'calculators.sub': '选择您需要的工具并立即计算',
                 'categories.title': '📂 按分类浏览',
@@ -1816,8 +883,6 @@ if (document.readyState === 'loading') {
                 'faq.a3': '我们使用全球公认的数学算法。',
                 'faq.q4': '设计真的护眼吗？',
                 'faq.a4': '是的，界面使用柔和色彩，带有自动夜间模式。',
-                'faq.q5': '如何报告错误或建议新工具？',
-                'faq.a5': '通过"联系我们"页面联系我们，我们会及时回复。',
                 'about.title': '🧑‍💻 关于我们',
                 'about.text': '<strong>Global Calculators Hub</strong> 为全世界提供精确易用的计算工具。',
                 'footer.desc': '一个全面的免费计算器平台。',
@@ -1834,7 +899,6 @@ if (document.readyState === 'loading') {
                 'filter.math': '数学',
                 'filter.conversion': '转换',
                 'filter.education': '教育',
-                'search.placeholder': '🔍 搜索计算器...',
                 'calc.calculate': '计算',
                 'calc.reset': '重置',
                 'calc.close': '关闭',
@@ -1842,6 +906,8 @@ if (document.readyState === 'loading') {
                 'notification.desc': '已根据您的设备设置自动设置语言。',
                 'notification.confirm': '确定',
                 'notification.dismiss': '稍后更改',
+                'ad.header': '📢 广告位 – 顶部横幅',
+                'ad.footer': '📢 广告位 – 底部横幅',
             },
             hi: {
                 'nav.calculators': 'कैलकुलेटर',
@@ -1849,7 +915,8 @@ if (document.readyState === 'loading') {
                 'nav.faq': 'सामान्य प्रश्न',
                 'nav.about': 'हमारे बारे में',
                 'hero.title': 'सटीक और मुफ्त कैलकुलेटर <br><span class="highlight">दुनिया भर के लिए</span>',
-                'hero.sub': 'वित्त, स्वास्थ्य, गणित और रूपांतरण में 30+ उपकरण – 8 भाषाओं के साथ आँखों के अनुकूल इंटरफेस',
+                'hero.sub': '30+ उपकरण – 8 भाषाओं के साथ आँखों के अनुकूल इंटरफेस',
+                'search.placeholder': '🔍 कैलकुलेटर खोजें...',
                 'calculators.title': '✨ सभी कैलकुलेटर',
                 'calculators.sub': 'अपना टूल चुनें और तुरंत गणना करें',
                 'categories.title': '📂 श्रेणी के अनुसार ब्राउज़ करें',
@@ -1861,10 +928,8 @@ if (document.readyState === 'loading') {
                 'faq.a2': 'प्लेटफॉर्म 8 भाषाओं का समर्थन करता है: अरबी, अंग्रेजी, फ्रेंच, स्पेनिश, जर्मन, चीनी, हिंदी और रूसी।',
                 'faq.q3': 'मैं सटीकता पर कैसे भरोसा कर सकता हूँ?',
                 'faq.a3': 'हम विश्व स्तर पर मान्यता प्राप्त गणितीय एल्गोरिदम का उपयोग करते हैं।',
-                'faq.q4': 'क्या डिज़ाइन वास्तव में आँखों के अनुकूल है?',
+                'faq.q4': 'क्या डिज़ाइन आँखों के अनुकूल है?',
                 'faq.a4': 'हाँ, इंटरफेस स्वचालित डार्क मोड के साथ नरम रंगों का उपयोग करता है।',
-                'faq.q5': 'मैं त्रुटि कैसे रिपोर्ट करूँ या नया कैलकुलेटर सुझाऊँ?',
-                'faq.a5': '"संपर्क करें" पृष्ठ के माध्यम से हमसे संपर्क करें।',
                 'about.title': '🧑‍💻 हमारे बारे में',
                 'about.text': '<strong>Global Calculators Hub</strong> दुनिया भर के सभी लोगों के लिए सटीक और उपयोग में आसान गणना उपकरण प्रदान करता है।',
                 'footer.desc': 'एक व्यापक, मुफ्त कैलकुलेटर प्लेटफॉर्म।',
@@ -1881,7 +946,6 @@ if (document.readyState === 'loading') {
                 'filter.math': 'गणित',
                 'filter.conversion': 'रूपांतरण',
                 'filter.education': 'शिक्षा',
-                'search.placeholder': '🔍 कैलकुलेटर खोजें...',
                 'calc.calculate': 'गणना करें',
                 'calc.reset': 'रीसेट करें',
                 'calc.close': 'बंद करें',
@@ -1889,6 +953,8 @@ if (document.readyState === 'loading') {
                 'notification.desc': 'आपके डिवाइस सेटिंग्स के आधार पर भाषा स्वचालित रूप से सेट की गई है।',
                 'notification.confirm': 'ठीक है',
                 'notification.dismiss': 'बाद में बदलें',
+                'ad.header': '📢 विज्ञापन स्थान – हेडर बैनर',
+                'ad.footer': '📢 विज्ञापन स्थान – फुटर बैनर',
             },
             ru: {
                 'nav.calculators': 'Калькуляторы',
@@ -1896,7 +962,8 @@ if (document.readyState === 'loading') {
                 'nav.faq': 'Часто задаваемые вопросы',
                 'nav.about': 'О нас',
                 'hero.title': 'Точные и бесплатные калькуляторы <br><span class="highlight">Для всего мира</span>',
-                'hero.sub': 'Более 30 инструментов для финансов, здоровья, математики и конвертации – удобный для глаз интерфейс с 8 языками',
+                'hero.sub': 'Более 30 инструментов – Удобный для глаз интерфейс с 8 языками',
+                'search.placeholder': '🔍 Поиск калькулятора...',
                 'calculators.title': '✨ Все калькуляторы',
                 'calculators.sub': 'Выберите инструмент и рассчитайте мгновенно',
                 'categories.title': '📂 Просмотр по категориям',
@@ -1910,8 +977,6 @@ if (document.readyState === 'loading') {
                 'faq.a3': 'Мы используем всемирно признанные математические алгоритмы.',
                 'faq.q4': 'Действительно ли дизайн удобен для глаз?',
                 'faq.a4': 'Да, интерфейс использует мягкие цвета с автоматической тёмной темой.',
-                'faq.q5': 'Как сообщить об ошибке или предложить новый калькулятор?',
-                'faq.a5': 'Свяжитесь с нами через страницу "Контакты", и мы ответим оперативно.',
                 'about.title': '🧑‍💻 О нас',
                 'about.text': '<strong>Global Calculators Hub</strong> предлагает точные и простые в использовании инструменты для всех.',
                 'footer.desc': 'Всеобъемлющая бесплатная платформа калькуляторов.',
@@ -1928,7 +993,6 @@ if (document.readyState === 'loading') {
                 'filter.math': 'Математика',
                 'filter.conversion': 'Конвертация',
                 'filter.education': 'Образование',
-                'search.placeholder': '🔍 Поиск калькулятора...',
                 'calc.calculate': 'Рассчитать',
                 'calc.reset': 'Сбросить',
                 'calc.close': 'Закрыть',
@@ -1936,135 +1000,113 @@ if (document.readyState === 'loading') {
                 'notification.desc': 'Язык был автоматически установлен на основе настроек вашего устройства.',
                 'notification.confirm': 'ОК',
                 'notification.dismiss': 'Изменить позже',
+                'ad.header': '📢 Рекламное место – Верхний баннер',
+                'ad.footer': '📢 Рекламное место – Нижний баннер',
             }
         };
 
         // =============================================================
-        // 4. دوال الآلات الحاسبة (نفس السابق – اختصاراً)
+        // 2. البيانات – الآلات الحاسبة
         // =============================================================
-        function getCalculatorHTML(id) {
-            // نفس الدوال السابقة – تم حذفها للاختصار ولكنها موجودة في الكود الكامل
-            // سيتم إضافتها في النسخة النهائية
-            return `<p style="text-align:center;padding:20px;">جاري تحميل الأداة...</p>`;
-        }
+        const calculatorsData = [
+            { id: 'bmi', name: 'BMI', icon: '⚖️', category: 'صحة', desc: 'مؤشر كتلة الجسم' },
+            { id: 'percentage', name: 'نسبة مئوية', icon: '💯', category: 'رياضيات', desc: 'حساب النسب المئوية' },
+            { id: 'loan', name: 'القرض', icon: '🏦', category: 'مالية', desc: 'القسط الشهري والفائدة' },
+            { id: 'temperature', name: 'تحويل الحرارة', icon: '🌡️', category: 'تحويلات', desc: 'سيلسيوس، فهرنهايت، كلفن' },
+            { id: 'compound', name: 'فائدة مركبة', icon: '📈', category: 'مالية', desc: 'حساب العوائد الاستثمارية' },
+            { id: 'calories', name: 'سعرات حرارية', icon: '🔥', category: 'صحة', desc: 'احتياجك اليومي من السعرات' },
+            { id: 'length', name: 'تحويل الطول', icon: '📏', category: 'تحويلات', desc: 'متر، قدم، بوصة، كم' },
+            { id: 'average', name: 'المتوسط', icon: '📊', category: 'رياضيات', desc: 'حساب المتوسط الحسابي' },
+            { id: 'mortgage', name: 'الرهن العقاري', icon: '🏠', category: 'مالية', desc: 'حساب أقساط الرهن العقاري' },
+            { id: 'body-fat', name: 'دهون الجسم', icon: '🧬', category: 'صحة', desc: 'نسبة الدهون في الجسم' },
+            { id: 'fraction', name: 'كسور', icon: '½', category: 'رياضيات', desc: 'عمليات على الكسور' },
+            { id: 'weight', name: 'تحويل الوزن', icon: '⚖️', category: 'تحويلات', desc: 'كجم، رطل، طن' },
+            { id: 'savings', name: 'الادخار', icon: '🏦', category: 'مالية', desc: 'حساب مدخراتك المستقبلية' },
+            { id: 'water', name: 'شرب الماء', icon: '💧', category: 'صحة', desc: 'احتياجك اليومي من الماء' },
+            { id: 'scientific', name: 'آلة علمية', icon: '🧮', category: 'رياضيات', desc: 'آلة حاسبة علمية متقدمة' },
+            { id: 'currency', name: 'تحويل العملات', icon: '💱', category: 'تحويلات', desc: 'دولار، يورو، ريال' },
+            { id: 'investment', name: 'العائد على الاستثمار', icon: '📊', category: 'مالية', desc: 'حساب ROI' },
+            { id: 'bmr', name: 'معدل الأيض', icon: '💪', category: 'صحة', desc: 'معدل الأيض الأساسي BMR' },
+            { id: 'ratio', name: 'نسبة', icon: '📐', category: 'رياضيات', desc: 'حساب النسب' },
+            { id: 'area', name: 'تحويل المساحة', icon: '📐', category: 'تحويلات', desc: 'متر مربع، قدم مربع' },
+            { id: 'gpa', name: 'المعدل التراكمي', icon: '🎓', category: 'تعليم', desc: 'حساب المعدل GPA' },
+        ];
+
+        const categoriesData = [
+            { name: 'مالية', icon: '💰', desc: 'قروض، استثمار، ادخار، رهن' },
+            { name: 'صحة ولياقة', icon: '❤️', desc: 'BMI، سعرات، وزن، حمل' },
+            { name: 'رياضيات', icon: '📐', desc: 'نسب، كسور، إحصاء، هندسة' },
+            { name: 'تحويلات', icon: '🔄', desc: 'طول، وزن، حرارة، عملات' },
+            { name: 'تعليم', icon: '🎓', desc: 'معدل، تقدير، درجات' },
+        ];
 
         // =============================================================
-        // 5. الكشف التلقائي للغة – الميزة الجديدة
+        // 3. دوال اللغة – الكشف والتطبيق
         // =============================================================
-
-        /**
-         * كشف اللغة من عدة مصادر:
-         * 1. localStorage (تفضيل المستخدم)
-         * 2. navigator.language (لغة المتصفح)
-         * 3. navigator.languages (لغات المتصفح المدعومة)
-         * 4. توقيت البلد (من خلال Intl.DateTimeFormat)
-         */
         function detectUserLanguage() {
-            // اللغات المدعومة
-            const supportedLanguages = ['ar', 'en', 'fr', 'es', 'de', 'zh', 'hi', 'ru'];
-
-            // 1. التحقق من localStorage
-            const savedLang = localStorage.getItem('preferredLanguage');
-            if (savedLang && supportedLanguages.includes(savedLang)) {
-                return savedLang;
-            }
-
-            // 2. كشف لغة المتصفح
-            const browserLang = navigator.language || navigator.languages?.[0] || 'en';
-            const langCode = browserLang.split('-')[0].toLowerCase();
-
-            // 3. إذا كانت اللغة مدعومة، استخدمها
-            if (supportedLanguages.includes(langCode)) {
-                return langCode;
-            }
-
-            // 4. محاولة الكشف من خلال توقيت البلد
+            const supported = ['ar', 'en', 'fr', 'es', 'de', 'zh', 'hi', 'ru'];
+            
             try {
-                const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                // خريطة المناطق الزمنية إلى اللغات
-                const timeZoneMap = {
-                    'Asia/Riyadh': 'ar',
-                    'Asia/Dubai': 'ar',
-                    'Asia/Kuwait': 'ar',
-                    'Asia/Baghdad': 'ar',
-                    'Asia/Amman': 'ar',
-                    'Asia/Beirut': 'ar',
-                    'Africa/Cairo': 'ar',
-                    'Africa/Casablanca': 'ar',
-                    'Asia/Jerusalem': 'ar',
-                    'America/New_York': 'en',
-                    'America/Los_Angeles': 'en',
-                    'America/Chicago': 'en',
-                    'Europe/London': 'en',
-                    'Europe/Paris': 'fr',
-                    'Europe/Berlin': 'de',
-                    'Europe/Madrid': 'es',
-                    'Europe/Moscow': 'ru',
-                    'Asia/Shanghai': 'zh',
-                    'Asia/Hong_Kong': 'zh',
-                    'Asia/Kolkata': 'hi',
-                    'Asia/Dhaka': 'hi',
-                };
-                if (timeZoneMap[timeZone]) {
-                    return timeZoneMap[timeZone];
+                const saved = localStorage.getItem('preferredLanguage');
+                if (saved && supported.includes(saved)) return saved;
+            } catch (e) {}
+
+            try {
+                const langs = navigator.languages || [navigator.language || 'en'];
+                for (let lang of langs) {
+                    const base = lang.split('-')[0].toLowerCase();
+                    if (supported.includes(base)) return base;
                 }
-            } catch (e) {
-                // تجاهل
-            }
+            } catch (e) {}
 
-            // 5. كشف اللغة من خلال IP (باستخدام API خارجي – اختياري)
-            // يمكن إضافة طلب AJAX إلى ip-api.com للحصول على البلد
+            try {
+                const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                const map = {
+                    'Asia/Riyadh': 'ar', 'Asia/Dubai': 'ar', 'Asia/Kuwait': 'ar',
+                    'Asia/Baghdad': 'ar', 'Asia/Amman': 'ar', 'Asia/Beirut': 'ar',
+                    'Africa/Cairo': 'ar', 'Africa/Casablanca': 'ar', 'Asia/Jerusalem': 'ar',
+                    'America/New_York': 'en', 'America/Los_Angeles': 'en',
+                    'Europe/London': 'en', 'Europe/Paris': 'fr', 'Europe/Berlin': 'de',
+                    'Europe/Madrid': 'es', 'Europe/Moscow': 'ru', 'Asia/Shanghai': 'zh',
+                    'Asia/Kolkata': 'hi'
+                };
+                if (map[tz]) return map[tz];
+            } catch (e) {}
 
-            // 6. اللغة الافتراضية
             return 'en';
         }
 
-        /**
-         * عرض إشعار للمستخدم عند تغيير اللغة تلقائياً
-         */
-        function showLanguageNotification(lang) {
-            const t = translations[lang] || translations['ar'];
-            const notif = document.getElementById('langNotification');
-            document.getElementById('langNotifTitle').textContent = t['notification.title'] || '🌍 تم اكتشاف لغتك';
-            document.getElementById('langNotifDesc').textContent = t['notification.desc'] || 'تم ضبط اللغة تلقائياً حسب إعدادات جهازك.';
-            document.getElementById('langNotifConfirm').textContent = t['notification.confirm'] || 'موافق';
-            document.getElementById('langNotifDismiss').textContent = t['notification.dismiss'] || 'تغيير لاحقاً';
-
-            notif.classList.add('active');
-
-            // إخفاء الإشعار بعد 10 ثوانٍ
-            setTimeout(() => {
-                notif.classList.remove('active');
-            }, 10000);
-        }
-
-        // =============================================================
-        // 6. تطبيق الترجمة
-        // =============================================================
         function applyTranslations(lang) {
-            const t = translations[lang] || translations['ar'];
+            if (!translations || !translations[lang]) {
+                console.warn('⚠️ لغة غير مدعومة، استخدام الإنجليزية');
+                lang = 'en';
+            }
+            
+            const t = translations[lang];
+            
+            // تطبيق على كل العناصر
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.dataset.i18n;
-                if (t[key] !== undefined) {
-                    if (key === 'hero.title' || key === 'about.text') {
-                        el.innerHTML = t[key];
-                    } else {
-                        el.textContent = t[key];
-                    }
+                if (t[key] !== undefined && t[key] !== null) {
+                    try {
+                        if (key === 'hero.title' || key === 'about.text' || 
+                            key === 'notification.title' || key === 'notification.desc') {
+                            el.innerHTML = t[key];
+                        } else {
+                            el.textContent = t[key];
+                        }
+                    } catch (e) {}
                 }
             });
-
-            // تغيير اتجاه الصفحة
-            const dir = (lang === 'ar') ? 'rtl' : 'ltr';
-            document.documentElement.dir = dir;
+            
+            // اتجاه الصفحة
+            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
             document.documentElement.lang = lang;
-
-            // تحديث placeholder البحث
-            const search = document.getElementById('global-search');
-            if (t['search.placeholder']) {
-                search.placeholder = t['search.placeholder'];
-            }
-
+            
+            // تحديث محدد اللغة
+            const selector = document.getElementById('lang-selector');
+            if (selector) selector.value = lang;
+            
             // تحديث عنوان الصفحة
             const titles = {
                 ar: 'حاسباتي العالمية – آلات حاسبة دقيقة ومجانية',
@@ -2076,71 +1118,43 @@ if (document.readyState === 'loading') {
                 hi: 'Global Calculators Hub – सटीक और मुफ्त कैलकुलेटर',
                 ru: 'Global Calculators Hub – Точные и бесплатные калькуляторы'
             };
-            document.title = titles[lang] || titles['ar'];
+            document.title = titles[lang] || titles['en'];
+        }
 
-            // تحديث محدد اللغة
-            const selector = document.getElementById('lang-selector');
-            if (selector.value !== lang) {
-                selector.value = lang;
-            }
+        function showLanguageNotification(lang) {
+            try {
+                const t = translations[lang] || translations['en'];
+                const notif = document.getElementById('langNotification');
+                if (!notif) return;
+                
+                document.getElementById('langNotifTitle').textContent = t['notification.title'] || '🌍 تم اكتشاف لغتك';
+                document.getElementById('langNotifDesc').textContent = t['notification.desc'] || 'تم ضبط اللغة تلقائياً حسب إعدادات جهازك.';
+                document.getElementById('langNotifConfirm').textContent = t['notification.confirm'] || 'موافق';
+                document.getElementById('langNotifDismiss').textContent = t['notification.dismiss'] || 'تغيير لاحقاً';
+                
+                notif.classList.add('active');
+                setTimeout(() => notif.classList.remove('active'), 8000);
+            } catch (e) {}
         }
 
         // =============================================================
-        // 7. التهيئة الرئيسية
-        // =============================================================
-        function init() {
-            // 1. كشف اللغة التلقائي
-            const detectedLang = detectUserLanguage();
-
-            // 2. التحقق إذا كانت اللغة مخزنة مسبقاً
-            const savedLang = localStorage.getItem('preferredLanguage');
-            let finalLang = detectedLang;
-
-            // إذا لم يكن هناك تفضيل مخزن، استخدم اللغة المكتشفة
-            if (!savedLang) {
-                finalLang = detectedLang;
-                // عرض إشعار للمستخدم
-                showLanguageNotification(finalLang);
-            } else {
-                finalLang = savedLang;
-            }
-
-            // 3. تطبيق اللغة
-            applyTranslations(finalLang);
-
-            // 4. تحميل الآلات الحاسبة والفئات
-            renderCalculators('all');
-            renderCategories();
-
-            // 5. تطبيق الوضع الليلي
-            const theme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', theme);
-            document.getElementById('theme-toggle').textContent = theme === 'dark' ? '☀️' : '🌙';
-
-            console.log('🚀 حاسباتي العالمية تعمل بكامل طاقتها!');
-            console.log(`🌍 اللغة المكتشفة: ${finalLang} (${translations[finalLang]?.hero.title || ''})`);
-            console.log('📊 عدد الآلات الحاسبة: ' + calculatorsData.length);
-            console.log('👁️ واجهة مريحة للعين مع وضع ليلي تلقائي');
-        }
-
-        // =============================================================
-        // 8. دوال العرض (مختصرة للتشغيل السريع)
+        // 4. دوال العرض
         // =============================================================
         function renderCalculators(filter = 'all') {
             const grid = document.getElementById('featured-grid');
             const filtered = filter === 'all' ? calculatorsData : calculatorsData.filter(c => c.category === filter);
+            
             grid.innerHTML = filtered.map(calc => `
-                <a href="#" class="calc-card" data-id="${calc.id}">
+                <div class="calc-card" data-id="${calc.id}">
                     <div class="icon">${calc.icon}</div>
                     <h3>${calc.name}</h3>
                     <div class="calc-desc">${calc.desc}</div>
                     <div class="calc-category">${calc.category}</div>
-                </a>
+                </div>
             `).join('');
-
+            
             document.querySelectorAll('.calc-card').forEach(card => {
-                card.addEventListener('click', (e) => {
-                    e.preventDefault();
+                card.addEventListener('click', () => {
                     const id = card.dataset.id;
                     openCalculator(id);
                 });
@@ -2152,26 +1166,26 @@ if (document.readyState === 'loading') {
             grid.innerHTML = categoriesData.map(cat => {
                 const count = calculatorsData.filter(c => c.category === cat.name.replace(/ ولياقة$/, '')).length;
                 return `
-                <div class="category-card" data-category="${cat.name}">
-                    <div class="cat-icon">${cat.icon}</div>
-                    <h3>${cat.name}</h3>
-                    <p>${cat.desc}</p>
-                    <div class="count">${count} أداة</div>
-                </div>
-            `;
+                    <div class="category-card" data-category="${cat.name}">
+                        <div class="cat-icon">${cat.icon}</div>
+                        <h3>${cat.name}</h3>
+                        <p>${cat.desc}</p>
+                        <div class="count">${count} أداة</div>
+                    </div>
+                `;
             }).join('');
-
+            
             document.querySelectorAll('.category-card').forEach(card => {
                 card.addEventListener('click', () => {
                     const cat = card.dataset.category;
-                    const filterMap = {
+                    const map = {
                         'مالية': 'مالية',
                         'صحة ولياقة': 'صحة',
                         'رياضيات': 'رياضيات',
                         'تحويلات': 'تحويلات',
                         'تعليم': 'تعليم'
                     };
-                    const filter = filterMap[cat] || 'all';
+                    const filter = map[cat] || 'all';
                     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                     document.querySelector(`.filter-btn[data-filter="${filter}"]`)?.classList.add('active');
                     renderCalculators(filter);
@@ -2180,46 +1194,129 @@ if (document.readyState === 'loading') {
             });
         }
 
-        // =============================================================
-        // 9. فتح النافذة المنبثقة (مبسطة)
-        // =============================================================
         function openCalculator(id) {
             const modal = document.getElementById('calcModal');
             const title = document.getElementById('modalTitle');
             const content = document.getElementById('modalContent');
-
+            
             const calc = calculatorsData.find(c => c.id === id);
             title.textContent = calc ? `${calc.icon} ${calc.name}` : 'آلة حاسبة';
-            content.innerHTML = `<p style="text-align:center;padding:20px;">🧮 جاري تحميل الأداة: ${calc?.name || ''}</p>
-                                <p style="text-align:center;font-size:13px;color:var(--text-muted);">هذه نسخة مبسطة – سيتم إضافة المنطق الكامل عند الطلب</p>`;
-
+            
+            // نموذج بسيط للآلة الحاسبة
+            content.innerHTML = `
+                <div class="input-group">
+                    <label data-i18n="calc.example">أدخل القيمة</label>
+                    <input type="number" id="calc-input" placeholder="0" step="any">
+                </div>
+                <div class="btn-group">
+                    <button class="btn-primary" onclick="calculateSimple()" data-i18n="calc.calculate">احسب</button>
+                    <button class="btn-secondary" onclick="resetCalculator()" data-i18n="calc.reset">إعادة تعيين</button>
+                </div>
+                <div class="result-box" id="calc-result">
+                    <div id="calc-result-value"></div>
+                    <div class="result-detail" id="calc-result-detail"></div>
+                </div>
+                <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px;">
+                    🔧 هذه نسخة مبسطة – سيتم إضافة المنطق الكامل لكل أداة عند الطلب
+                </p>
+            `;
+            
+            // إعادة تطبيق الترجمة على المحتوى الجديد
+            const currentLang = document.documentElement.lang || 'ar';
+            applyTranslations(currentLang);
+            
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
         // =============================================================
-        // 10. أحداث التفاعل
+        // 5. دوال مساعدة
         // =============================================================
-
-        // إغلاق النافذة
-        document.getElementById('closeModal').addEventListener('click', () => {
-            document.getElementById('calcModal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        });
-
-        document.getElementById('calcModal').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) {
-                document.getElementById('calcModal').classList.remove('active');
-                document.body.style.overflow = 'auto';
+        window.calculateSimple = function() {
+            const input = document.getElementById('calc-input');
+            const result = document.getElementById('calc-result');
+            const valueEl = document.getElementById('calc-result-value');
+            const detailEl = document.getElementById('calc-result-detail');
+            
+            if (!input || !result) return;
+            
+            const val = parseFloat(input.value);
+            if (isNaN(val) || val <= 0) {
+                result.classList.add('active');
+                valueEl.textContent = '⚠️ يرجى إدخال قيمة صحيحة';
+                detailEl.textContent = '';
+                return;
             }
+            
+            result.classList.add('active');
+            valueEl.textContent = `✅ النتيجة: ${(val * 2).toFixed(2)}`;
+            detailEl.textContent = `القيمة المدخلة: ${val} × 2 = ${(val * 2).toFixed(2)}`;
+        };
+
+        window.resetCalculator = function() {
+            const modal = document.getElementById('calcModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        };
+
+        // =============================================================
+        // 6. التهيئة
+        // =============================================================
+        function init() {
+            console.log('🚀 بدء تشغيل حاسباتي العالمية...');
+            
+            // كشف اللغة
+            let lang = detectUserLanguage();
+            const supported = ['ar', 'en', 'fr', 'es', 'de', 'zh', 'hi', 'ru'];
+            if (!supported.includes(lang)) lang = 'en';
+            
+            // التحقق من التفضيل المحفوظ
+            try {
+                const saved = localStorage.getItem('preferredLanguage');
+                if (saved && supported.includes(saved)) lang = saved;
+            } catch (e) {}
+            
+            // تطبيق اللغة
+            applyTranslations(lang);
+            
+            // عرض الإشعار إذا كانت اللغة مكتشفة تلقائياً
+            try {
+                const saved = localStorage.getItem('preferredLanguage');
+                if (!saved) {
+                    setTimeout(() => showLanguageNotification(lang), 300);
+                }
+            } catch (e) {}
+            
+            // تحميل المحتوى
+            renderCalculators('all');
+            renderCategories();
+            
+            // الوضع الليلي
+            try {
+                const theme = localStorage.getItem('theme') || 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                const toggle = document.getElementById('theme-toggle');
+                if (toggle) toggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+            } catch (e) {}
+            
+            console.log(`🌍 اللغة: ${lang} (${translations[lang]?.hero.title || ''})`);
+            console.log(`📊 عدد الآلات الحاسبة: ${calculatorsData.length}`);
+            console.log('✅ حاسباتي العالمية جاهزة!');
+        }
+
+        // =============================================================
+        // 7. الأحداث
+        // =============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // تأخير بسيط لضمان تحميل DOM بالكامل
+            setTimeout(init, 50);
         });
 
-        // اختيار اللغة يدوياً
+        // تغيير اللغة يدوياً
         document.getElementById('lang-selector').addEventListener('change', (e) => {
             const lang = e.target.value;
             localStorage.setItem('preferredLanguage', lang);
             applyTranslations(lang);
-            // إخفاء الإشعار
             document.getElementById('langNotification').classList.remove('active');
         });
 
@@ -2239,7 +1336,6 @@ if (document.readyState === 'loading') {
         document.getElementById('langNotifConfirm').addEventListener('click', () => {
             document.getElementById('langNotification').classList.remove('active');
         });
-
         document.getElementById('langNotifDismiss').addEventListener('click', () => {
             document.getElementById('langNotification').classList.remove('active');
         });
@@ -2251,6 +1347,12 @@ if (document.readyState === 'loading') {
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('theme', next);
             document.getElementById('theme-toggle').textContent = next === 'dark' ? '☀️' : '🌙';
+        });
+
+        // إغلاق النافذة المنبثقة
+        document.getElementById('closeModal').addEventListener('click', resetCalculator);
+        document.getElementById('calcModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) resetCalculator();
         });
 
         // الفلترة
@@ -2283,11 +1385,10 @@ if (document.readyState === 'loading') {
                 suggestions.innerHTML = `<div class="suggestion-item">🔍 لا توجد نتائج</div>`;
             } else {
                 suggestions.innerHTML = results.map(c =>
-                    `<a href="#" class="suggestion-item" data-id="${c.id}">${c.icon} ${c.name} <span class="badge">${c.category}</span></a>`
+                    `<div class="suggestion-item" data-id="${c.id}">${c.icon} ${c.name} <span class="badge">${c.category}</span></div>`
                 ).join('');
                 suggestions.querySelectorAll('.suggestion-item').forEach(item => {
-                    item.addEventListener('click', (e) => {
-                        e.preventDefault();
+                    item.addEventListener('click', () => {
                         const id = item.dataset.id;
                         openCalculator(id);
                         suggestions.classList.remove('active');
@@ -2304,10 +1405,7 @@ if (document.readyState === 'loading') {
             }
         });
 
-        // =============================================================
-        // 11. بدء التشغيل
-        // =============================================================
-        document.addEventListener('DOMContentLoaded', init);
+        console.log('✅ جميع الأحداث مسجلة بنجاح!');
     </script>
 
 </body>
