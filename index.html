@@ -620,7 +620,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- ====== JavaScript – الترجمة الكاملة ====== -->
+    <!-- ====== JavaScript – النسخة المصححة بالكامل ====== -->
     <!-- ============================================================ -->
     <script>
         // =============================================================
@@ -673,6 +673,7 @@
                 'notification.dismiss': 'تغيير لاحقاً',
                 'ad.header': '📢 مساحة إعلانية – Header Banner',
                 'ad.footer': '📢 مساحة إعلانية – Footer Banner',
+                'calc.example': 'أدخل القيمة',
             },
             en: {
                 'nav.calculators': 'Calculators',
@@ -720,6 +721,7 @@
                 'notification.dismiss': 'Change later',
                 'ad.header': '📢 Ad Space – Header Banner',
                 'ad.footer': '📢 Ad Space – Footer Banner',
+                'calc.example': 'Enter value',
             },
             fr: {
                 'nav.calculators': 'Calculatrices',
@@ -767,6 +769,7 @@
                 'notification.dismiss': 'Changer plus tard',
                 'ad.header': '📢 Espace publicitaire – Bannière d\'en-tête',
                 'ad.footer': '📢 Espace publicitaire – Bannière de pied de page',
+                'calc.example': 'Entrez la valeur',
             },
             es: {
                 'nav.calculators': 'Calculadoras',
@@ -814,6 +817,7 @@
                 'notification.dismiss': 'Cambiar más tarde',
                 'ad.header': '📢 Espacio publicitario – Banner superior',
                 'ad.footer': '📢 Espacio publicitario – Banner inferior',
+                'calc.example': 'Ingrese el valor',
             },
             de: {
                 'nav.calculators': 'Taschenrechner',
@@ -861,6 +865,7 @@
                 'notification.dismiss': 'Später ändern',
                 'ad.header': '📢 Werbefläche – Kopfzeile',
                 'ad.footer': '📢 Werbefläche – Fußzeile',
+                'calc.example': 'Wert eingeben',
             },
             zh: {
                 'nav.calculators': '计算器',
@@ -908,6 +913,7 @@
                 'notification.dismiss': '稍后更改',
                 'ad.header': '📢 广告位 – 顶部横幅',
                 'ad.footer': '📢 广告位 – 底部横幅',
+                'calc.example': '输入数值',
             },
             hi: {
                 'nav.calculators': 'कैलकुलेटर',
@@ -955,6 +961,7 @@
                 'notification.dismiss': 'बाद में बदलें',
                 'ad.header': '📢 विज्ञापन स्थान – हेडर बैनर',
                 'ad.footer': '📢 विज्ञापन स्थान – फुटर बैनर',
+                'calc.example': 'मान दर्ज करें',
             },
             ru: {
                 'nav.calculators': 'Калькуляторы',
@@ -1002,6 +1009,7 @@
                 'notification.dismiss': 'Изменить позже',
                 'ad.header': '📢 Рекламное место – Верхний баннер',
                 'ad.footer': '📢 Рекламное место – Нижний баннер',
+                'calc.example': 'Введите значение',
             }
         };
 
@@ -1041,7 +1049,7 @@
         ];
 
         // =============================================================
-        // 3. دوال اللغة – الكشف والتطبيق
+        // 3. دوال اللغة – الكشف والتطبيق (نسخة محصنة)
         // =============================================================
         function detectUserLanguage() {
             const supported = ['ar', 'en', 'fr', 'es', 'de', 'zh', 'hi', 'ru'];
@@ -1054,8 +1062,10 @@
             try {
                 const langs = navigator.languages || [navigator.language || 'en'];
                 for (let lang of langs) {
-                    const base = lang.split('-')[0].toLowerCase();
-                    if (supported.includes(base)) return base;
+                    if (typeof lang === 'string') {
+                        const base = lang.split('-')[0].toLowerCase();
+                        if (supported.includes(base)) return base;
+                    }
                 }
             } catch (e) {}
 
@@ -1066,9 +1076,11 @@
                     'Asia/Baghdad': 'ar', 'Asia/Amman': 'ar', 'Asia/Beirut': 'ar',
                     'Africa/Cairo': 'ar', 'Africa/Casablanca': 'ar', 'Asia/Jerusalem': 'ar',
                     'America/New_York': 'en', 'America/Los_Angeles': 'en',
-                    'Europe/London': 'en', 'Europe/Paris': 'fr', 'Europe/Berlin': 'de',
-                    'Europe/Madrid': 'es', 'Europe/Moscow': 'ru', 'Asia/Shanghai': 'zh',
-                    'Asia/Kolkata': 'hi'
+                    'America/Chicago': 'en', 'Europe/London': 'en',
+                    'Europe/Paris': 'fr', 'Europe/Berlin': 'de',
+                    'Europe/Madrid': 'es', 'Europe/Moscow': 'ru',
+                    'Asia/Shanghai': 'zh', 'Asia/Hong_Kong': 'zh',
+                    'Asia/Kolkata': 'hi', 'Asia/Dhaka': 'hi'
                 };
                 if (map[tz]) return map[tz];
             } catch (e) {}
@@ -1077,235 +1089,333 @@
         }
 
         function applyTranslations(lang) {
-            if (!translations || !translations[lang]) {
-                console.warn('⚠️ لغة غير مدعومة، استخدام الإنجليزية');
-                lang = 'en';
+            // التحقق من وجود الترجمة
+            if (typeof translations === 'undefined' || !translations) {
+                console.error('❌ كائن الترجمة غير موجود!');
+                return;
             }
-            
+
+            // التحقق من اللغة
+            const supported = ['ar', 'en', 'fr', 'es', 'de', 'zh', 'hi', 'ru'];
+            if (!supported.includes(lang) || !translations[lang]) {
+                console.warn(`⚠️ لغة غير مدعومة: "${lang}"، استخدام الإنجليزية`);
+                lang = 'en';
+                if (!translations[lang]) {
+                    console.error('❌ حتى الإنجليزية غير متوفرة!');
+                    return;
+                }
+            }
+
             const t = translations[lang];
-            
-            // تطبيق على كل العناصر
+
+            // تطبيق الترجمة على العناصر
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.dataset.i18n;
-                if (t[key] !== undefined && t[key] !== null) {
+                if (key && t[key] !== undefined && t[key] !== null) {
                     try {
-                        if (key === 'hero.title' || key === 'about.text' || 
-                            key === 'notification.title' || key === 'notification.desc') {
+                        const isHtml = ['hero.title', 'about.text', 'notification.title', 'notification.desc'];
+                        if (isHtml.includes(key)) {
                             el.innerHTML = t[key];
                         } else {
                             el.textContent = t[key];
                         }
-                    } catch (e) {}
+                    } catch (e) { /* تجاهل */ }
                 }
             });
-            
+
             // اتجاه الصفحة
-            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
-            document.documentElement.lang = lang;
-            
+            try {
+                document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+                document.documentElement.lang = lang;
+            } catch (e) {}
+
             // تحديث محدد اللغة
-            const selector = document.getElementById('lang-selector');
-            if (selector) selector.value = lang;
-            
+            try {
+                const selector = document.getElementById('lang-selector');
+                if (selector) selector.value = lang;
+            } catch (e) {}
+
+            // تحديث placeholder
+            try {
+                const search = document.getElementById('global-search');
+                if (search && t['search.placeholder']) {
+                    search.placeholder = t['search.placeholder'];
+                }
+            } catch (e) {}
+
             // تحديث عنوان الصفحة
-            const titles = {
-                ar: 'حاسباتي العالمية – آلات حاسبة دقيقة ومجانية',
-                en: 'Global Calculators Hub – Accurate & Free Calculators',
-                fr: 'Calculators Hub – Calculatrices précises et gratuites',
-                es: 'Global Calculators Hub – Calculadoras precisas y gratuitas',
-                de: 'Global Calculators Hub – Präzise & kostenlose Rechner',
-                zh: 'Global Calculators Hub – 精确且免费的计算器',
-                hi: 'Global Calculators Hub – सटीक और मुफ्त कैलकुलेटर',
-                ru: 'Global Calculators Hub – Точные и бесплатные калькуляторы'
-            };
-            document.title = titles[lang] || titles['en'];
+            try {
+                const titles = {
+                    ar: 'حاسباتي العالمية – آلات حاسبة دقيقة ومجانية',
+                    en: 'Global Calculators Hub – Accurate & Free Calculators',
+                    fr: 'Calculators Hub – Calculatrices précises et gratuites',
+                    es: 'Global Calculators Hub – Calculadoras precisas y gratuitas',
+                    de: 'Global Calculators Hub – Präzise & kostenlose Rechner',
+                    zh: 'Global Calculators Hub – 精确且免费的计算器',
+                    hi: 'Global Calculators Hub – सटीक और मुफ्त कैलकुलेटर',
+                    ru: 'Global Calculators Hub – Точные и бесплатные калькуляторы'
+                };
+                document.title = titles[lang] || titles['en'] || 'Global Calculators Hub';
+            } catch (e) {}
         }
 
         function showLanguageNotification(lang) {
             try {
-                const t = translations[lang] || translations['en'];
+                if (!translations || !translations[lang]) {
+                    lang = 'en';
+                    if (!translations || !translations[lang]) return;
+                }
+
+                const t = translations[lang];
                 const notif = document.getElementById('langNotification');
                 if (!notif) return;
-                
-                document.getElementById('langNotifTitle').textContent = t['notification.title'] || '🌍 تم اكتشاف لغتك';
-                document.getElementById('langNotifDesc').textContent = t['notification.desc'] || 'تم ضبط اللغة تلقائياً حسب إعدادات جهازك.';
-                document.getElementById('langNotifConfirm').textContent = t['notification.confirm'] || 'موافق';
-                document.getElementById('langNotifDismiss').textContent = t['notification.dismiss'] || 'تغيير لاحقاً';
-                
+
+                const titleEl = document.getElementById('langNotifTitle');
+                const descEl = document.getElementById('langNotifDesc');
+                const confirmBtn = document.getElementById('langNotifConfirm');
+                const dismissBtn = document.getElementById('langNotifDismiss');
+
+                if (titleEl) titleEl.textContent = t['notification.title'] || '🌍 تم اكتشاف لغتك';
+                if (descEl) descEl.textContent = t['notification.desc'] || 'تم ضبط اللغة تلقائياً حسب إعدادات جهازك.';
+                if (confirmBtn) confirmBtn.textContent = t['notification.confirm'] || 'موافق';
+                if (dismissBtn) dismissBtn.textContent = t['notification.dismiss'] || 'تغيير لاحقاً';
+
                 notif.classList.add('active');
                 setTimeout(() => notif.classList.remove('active'), 8000);
-            } catch (e) {}
+            } catch (e) {
+                console.warn('⚠️ خطأ في عرض إشعار اللغة:', e);
+            }
         }
 
         // =============================================================
         // 4. دوال العرض
         // =============================================================
         function renderCalculators(filter = 'all') {
-            const grid = document.getElementById('featured-grid');
-            const filtered = filter === 'all' ? calculatorsData : calculatorsData.filter(c => c.category === filter);
-            
-            grid.innerHTML = filtered.map(calc => `
-                <div class="calc-card" data-id="${calc.id}">
-                    <div class="icon">${calc.icon}</div>
-                    <h3>${calc.name}</h3>
-                    <div class="calc-desc">${calc.desc}</div>
-                    <div class="calc-category">${calc.category}</div>
-                </div>
-            `).join('');
-            
-            document.querySelectorAll('.calc-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const id = card.dataset.id;
-                    openCalculator(id);
+            try {
+                const grid = document.getElementById('featured-grid');
+                if (!grid) return;
+
+                const filtered = filter === 'all' ? calculatorsData : calculatorsData.filter(c => c.category === filter);
+
+                grid.innerHTML = filtered.map(calc => `
+                    <div class="calc-card" data-id="${calc.id}">
+                        <div class="icon">${calc.icon}</div>
+                        <h3>${calc.name}</h3>
+                        <div class="calc-desc">${calc.desc}</div>
+                        <div class="calc-category">${calc.category}</div>
+                    </div>
+                `).join('');
+
+                document.querySelectorAll('.calc-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const id = card.dataset.id;
+                        openCalculator(id);
+                    });
                 });
-            });
+            } catch (e) {
+                console.error('❌ خطأ في تحميل الآلات الحاسبة:', e);
+            }
         }
 
         function renderCategories() {
-            const grid = document.getElementById('category-grid');
-            grid.innerHTML = categoriesData.map(cat => {
-                const count = calculatorsData.filter(c => c.category === cat.name.replace(/ ولياقة$/, '')).length;
-                return `
-                    <div class="category-card" data-category="${cat.name}">
-                        <div class="cat-icon">${cat.icon}</div>
-                        <h3>${cat.name}</h3>
-                        <p>${cat.desc}</p>
-                        <div class="count">${count} أداة</div>
-                    </div>
-                `;
-            }).join('');
-            
-            document.querySelectorAll('.category-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const cat = card.dataset.category;
-                    const map = {
-                        'مالية': 'مالية',
-                        'صحة ولياقة': 'صحة',
-                        'رياضيات': 'رياضيات',
-                        'تحويلات': 'تحويلات',
-                        'تعليم': 'تعليم'
-                    };
-                    const filter = map[cat] || 'all';
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    document.querySelector(`.filter-btn[data-filter="${filter}"]`)?.classList.add('active');
-                    renderCalculators(filter);
-                    document.getElementById('calculators').scrollIntoView({ behavior: 'smooth' });
+            try {
+                const grid = document.getElementById('category-grid');
+                if (!grid) return;
+
+                grid.innerHTML = categoriesData.map(cat => {
+                    const count = calculatorsData.filter(c => c.category === cat.name.replace(/ ولياقة$/, '')).length;
+                    return `
+                        <div class="category-card" data-category="${cat.name}">
+                            <div class="cat-icon">${cat.icon}</div>
+                            <h3>${cat.name}</h3>
+                            <p>${cat.desc}</p>
+                            <div class="count">${count} أداة</div>
+                        </div>
+                    `;
+                }).join('');
+
+                document.querySelectorAll('.category-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const cat = card.dataset.category;
+                        const map = {
+                            'مالية': 'مالية',
+                            'صحة ولياقة': 'صحة',
+                            'رياضيات': 'رياضيات',
+                            'تحويلات': 'تحويلات',
+                            'تعليم': 'تعليم'
+                        };
+                        const filter = map[cat] || 'all';
+                        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                        document.querySelector(`.filter-btn[data-filter="${filter}"]`)?.classList.add('active');
+                        renderCalculators(filter);
+                        document.getElementById('calculators').scrollIntoView({ behavior: 'smooth' });
+                    });
                 });
-            });
+            } catch (e) {
+                console.error('❌ خطأ في تحميل الفئات:', e);
+            }
         }
 
         function openCalculator(id) {
-            const modal = document.getElementById('calcModal');
-            const title = document.getElementById('modalTitle');
-            const content = document.getElementById('modalContent');
-            
-            const calc = calculatorsData.find(c => c.id === id);
-            title.textContent = calc ? `${calc.icon} ${calc.name}` : 'آلة حاسبة';
-            
-            // نموذج بسيط للآلة الحاسبة
-            content.innerHTML = `
-                <div class="input-group">
-                    <label data-i18n="calc.example">أدخل القيمة</label>
-                    <input type="number" id="calc-input" placeholder="0" step="any">
-                </div>
-                <div class="btn-group">
-                    <button class="btn-primary" onclick="calculateSimple()" data-i18n="calc.calculate">احسب</button>
-                    <button class="btn-secondary" onclick="resetCalculator()" data-i18n="calc.reset">إعادة تعيين</button>
-                </div>
-                <div class="result-box" id="calc-result">
-                    <div id="calc-result-value"></div>
-                    <div class="result-detail" id="calc-result-detail"></div>
-                </div>
-                <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px;">
-                    🔧 هذه نسخة مبسطة – سيتم إضافة المنطق الكامل لكل أداة عند الطلب
-                </p>
-            `;
-            
-            // إعادة تطبيق الترجمة على المحتوى الجديد
-            const currentLang = document.documentElement.lang || 'ar';
-            applyTranslations(currentLang);
-            
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            try {
+                const modal = document.getElementById('calcModal');
+                const title = document.getElementById('modalTitle');
+                const content = document.getElementById('modalContent');
+
+                if (!modal || !title || !content) return;
+
+                const calc = calculatorsData.find(c => c.id === id);
+                title.textContent = calc ? `${calc.icon} ${calc.name}` : 'آلة حاسبة';
+
+                // الحصول على اللغة الحالية
+                const currentLang = document.documentElement.lang || 'ar';
+                const t = translations[currentLang] || translations['en'];
+
+                content.innerHTML = `
+                    <div class="input-group">
+                        <label data-i18n="calc.example">${t['calc.example'] || 'أدخل القيمة'}</label>
+                        <input type="number" id="calc-input" placeholder="0" step="any">
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-primary" onclick="calculateSimple()" data-i18n="calc.calculate">${t['calc.calculate'] || 'احسب'}</button>
+                        <button class="btn-secondary" onclick="resetCalculator()" data-i18n="calc.reset">${t['calc.reset'] || 'إعادة تعيين'}</button>
+                    </div>
+                    <div class="result-box" id="calc-result">
+                        <div id="calc-result-value"></div>
+                        <div class="result-detail" id="calc-result-detail"></div>
+                    </div>
+                    <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px;">
+                        🔧 نسخة مبسطة – سيتم إضافة المنطق الكامل لكل أداة عند الطلب
+                    </p>
+                `;
+
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } catch (e) {
+                console.error('❌ خطأ في فتح الآلة الحاسبة:', e);
+            }
         }
 
         // =============================================================
         // 5. دوال مساعدة
         // =============================================================
         window.calculateSimple = function() {
-            const input = document.getElementById('calc-input');
-            const result = document.getElementById('calc-result');
-            const valueEl = document.getElementById('calc-result-value');
-            const detailEl = document.getElementById('calc-result-detail');
-            
-            if (!input || !result) return;
-            
-            const val = parseFloat(input.value);
-            if (isNaN(val) || val <= 0) {
+            try {
+                const input = document.getElementById('calc-input');
+                const result = document.getElementById('calc-result');
+                const valueEl = document.getElementById('calc-result-value');
+                const detailEl = document.getElementById('calc-result-detail');
+
+                if (!input || !result) return;
+
+                const val = parseFloat(input.value);
+                if (isNaN(val) || val <= 0) {
+                    result.classList.add('active');
+                    valueEl.textContent = '⚠️ يرجى إدخال قيمة صحيحة';
+                    detailEl.textContent = '';
+                    return;
+                }
+
                 result.classList.add('active');
-                valueEl.textContent = '⚠️ يرجى إدخال قيمة صحيحة';
-                detailEl.textContent = '';
-                return;
+                valueEl.textContent = `✅ النتيجة: ${(val * 2).toFixed(2)}`;
+                detailEl.textContent = `القيمة المدخلة: ${val} × 2 = ${(val * 2).toFixed(2)}`;
+            } catch (e) {
+                console.error('❌ خطأ في الحساب:', e);
             }
-            
-            result.classList.add('active');
-            valueEl.textContent = `✅ النتيجة: ${(val * 2).toFixed(2)}`;
-            detailEl.textContent = `القيمة المدخلة: ${val} × 2 = ${(val * 2).toFixed(2)}`;
         };
 
         window.resetCalculator = function() {
-            const modal = document.getElementById('calcModal');
-            modal.classList.remove('active');
-            document.body.style.overflow = 'auto';
+            try {
+                const modal = document.getElementById('calcModal');
+                if (modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            } catch (e) { /* تجاهل */ }
         };
 
         // =============================================================
-        // 6. التهيئة
+        // 6. التهيئة – نسخة محصنة بالكامل
         // =============================================================
         function init() {
             console.log('🚀 بدء تشغيل حاسباتي العالمية...');
-            
-            // كشف اللغة
-            let lang = detectUserLanguage();
+
+            // 1. التأكد من وجود الترجمة
+            if (typeof translations === 'undefined' || !translations || Object.keys(translations).length === 0) {
+                console.error('❌ كائن الترجمة غير موجود!');
+                return;
+            }
+
+            // 2. كشف اللغة مع حماية
+            let lang = 'en';
+            try {
+                lang = detectUserLanguage();
+            } catch (e) {
+                console.warn('⚠️ خطأ في كشف اللغة، استخدام الافتراضية:', e);
+            }
+
+            // 3. التأكد من أن اللغة مدعومة
             const supported = ['ar', 'en', 'fr', 'es', 'de', 'zh', 'hi', 'ru'];
-            if (!supported.includes(lang)) lang = 'en';
-            
-            // التحقق من التفضيل المحفوظ
+            if (!supported.includes(lang) || !translations[lang]) {
+                console.warn(`⚠️ اللغة "${lang}" غير مدعومة، استخدام الإنجليزية`);
+                lang = 'en';
+            }
+
+            // 4. التحقق من التفضيل المخزن
             try {
                 const saved = localStorage.getItem('preferredLanguage');
-                if (saved && supported.includes(saved)) lang = saved;
-            } catch (e) {}
-            
-            // تطبيق اللغة
-            applyTranslations(lang);
-            
-            // عرض الإشعار إذا كانت اللغة مكتشفة تلقائياً
+                if (saved && supported.includes(saved) && translations[saved]) {
+                    lang = saved;
+                }
+            } catch (e) { /* تجاهل */ }
+
+            // 5. تطبيق اللغة مع حماية
+            try {
+                applyTranslations(lang);
+                console.log(`🌍 تم تطبيق اللغة: ${lang}`);
+            } catch (e) {
+                console.error('❌ خطأ في تطبيق الترجمة:', e);
+                try {
+                    applyTranslations('en');
+                    lang = 'en';
+                } catch (e2) {
+                    console.error('❌ فشل تطبيق حتى اللغة الإنجليزية!');
+                    return;
+                }
+            }
+
+            // 6. عرض الإشعار إذا كانت اللغة مكتشفة تلقائياً
             try {
                 const saved = localStorage.getItem('preferredLanguage');
                 if (!saved) {
                     setTimeout(() => showLanguageNotification(lang), 300);
                 }
-            } catch (e) {}
-            
-            // تحميل المحتوى
+            } catch (e) { /* تجاهل */ }
+
+            // 7. تحميل المحتوى
             renderCalculators('all');
             renderCategories();
-            
-            // الوضع الليلي
+
+            // 8. الوضع الليلي
             try {
                 const theme = localStorage.getItem('theme') || 'light';
                 document.documentElement.setAttribute('data-theme', theme);
                 const toggle = document.getElementById('theme-toggle');
                 if (toggle) toggle.textContent = theme === 'dark' ? '☀️' : '🌙';
-            } catch (e) {}
-            
-            console.log(`🌍 اللغة: ${lang} (${translations[lang]?.hero.title || ''})`);
-            console.log(`📊 عدد الآلات الحاسبة: ${calculatorsData.length}`);
-            console.log('✅ حاسباتي العالمية جاهزة!');
+            } catch (e) { /* تجاهل */ }
+
+            // 9. تحديث محدد اللغة
+            try {
+                const selector = document.getElementById('lang-selector');
+                if (selector) selector.value = lang;
+            } catch (e) { /* تجاهل */ }
+
+            console.log(`✅ حاسباتي العالمية جاهزة! (اللغة: ${lang})`);
+            console.log(`📊 عدد الآلات الحاسبة: ${calculatorsData?.length || 0}`);
         }
 
         // =============================================================
-        // 7. الأحداث
+        // 7. الأحداث – كلها محصنة
         // =============================================================
         document.addEventListener('DOMContentLoaded', () => {
             // تأخير بسيط لضمان تحميل DOM بالكامل
@@ -1313,11 +1423,11 @@
         });
 
         // تغيير اللغة يدوياً
-        document.getElementById('lang-selector').addEventListener('change', (e) => {
+        document.getElementById('lang-selector')?.addEventListener('change', (e) => {
             const lang = e.target.value;
             localStorage.setItem('preferredLanguage', lang);
             applyTranslations(lang);
-            document.getElementById('langNotification').classList.remove('active');
+            document.getElementById('langNotification')?.classList.remove('active');
         });
 
         // روابط اللغة في التذييل
@@ -1328,30 +1438,31 @@
                 localStorage.setItem('preferredLanguage', lang);
                 document.getElementById('lang-selector').value = lang;
                 applyTranslations(lang);
-                document.getElementById('langNotification').classList.remove('active');
+                document.getElementById('langNotification')?.classList.remove('active');
             });
         });
 
         // أزرار إشعار اللغة
-        document.getElementById('langNotifConfirm').addEventListener('click', () => {
-            document.getElementById('langNotification').classList.remove('active');
+        document.getElementById('langNotifConfirm')?.addEventListener('click', () => {
+            document.getElementById('langNotification')?.classList.remove('active');
         });
-        document.getElementById('langNotifDismiss').addEventListener('click', () => {
-            document.getElementById('langNotification').classList.remove('active');
+        document.getElementById('langNotifDismiss')?.addEventListener('click', () => {
+            document.getElementById('langNotification')?.classList.remove('active');
         });
 
         // الوضع الليلي
-        document.getElementById('theme-toggle').addEventListener('click', () => {
+        document.getElementById('theme-toggle')?.addEventListener('click', () => {
             const current = document.documentElement.getAttribute('data-theme');
             const next = current === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('theme', next);
-            document.getElementById('theme-toggle').textContent = next === 'dark' ? '☀️' : '🌙';
+            const toggle = document.getElementById('theme-toggle');
+            if (toggle) toggle.textContent = next === 'dark' ? '☀️' : '🌙';
         });
 
         // إغلاق النافذة المنبثقة
-        document.getElementById('closeModal').addEventListener('click', resetCalculator);
-        document.getElementById('calcModal').addEventListener('click', (e) => {
+        document.getElementById('closeModal')?.addEventListener('click', resetCalculator);
+        document.getElementById('calcModal')?.addEventListener('click', (e) => {
             if (e.target === e.currentTarget) resetCalculator();
         });
 
@@ -1368,42 +1479,44 @@
         const searchInput = document.getElementById('global-search');
         const suggestions = document.getElementById('search-suggestions');
 
-        searchInput.addEventListener('input', () => {
-            const query = searchInput.value.trim().toLowerCase();
-            if (query.length === 0) {
-                suggestions.classList.remove('active');
-                return;
-            }
+        if (searchInput && suggestions) {
+            searchInput.addEventListener('input', () => {
+                const query = searchInput.value.trim().toLowerCase();
+                if (query.length === 0) {
+                    suggestions.classList.remove('active');
+                    return;
+                }
 
-            const results = calculatorsData.filter(c =>
-                c.name.includes(query) ||
-                c.desc.includes(query) ||
-                c.category.includes(query)
-            );
+                const results = calculatorsData.filter(c =>
+                    c.name.includes(query) ||
+                    c.desc.includes(query) ||
+                    c.category.includes(query)
+                );
 
-            if (results.length === 0) {
-                suggestions.innerHTML = `<div class="suggestion-item">🔍 لا توجد نتائج</div>`;
-            } else {
-                suggestions.innerHTML = results.map(c =>
-                    `<div class="suggestion-item" data-id="${c.id}">${c.icon} ${c.name} <span class="badge">${c.category}</span></div>`
-                ).join('');
-                suggestions.querySelectorAll('.suggestion-item').forEach(item => {
-                    item.addEventListener('click', () => {
-                        const id = item.dataset.id;
-                        openCalculator(id);
-                        suggestions.classList.remove('active');
-                        searchInput.value = '';
+                if (results.length === 0) {
+                    suggestions.innerHTML = `<div class="suggestion-item">🔍 لا توجد نتائج</div>`;
+                } else {
+                    suggestions.innerHTML = results.map(c =>
+                        `<div class="suggestion-item" data-id="${c.id}">${c.icon} ${c.name} <span class="badge">${c.category}</span></div>`
+                    ).join('');
+                    suggestions.querySelectorAll('.suggestion-item').forEach(item => {
+                        item.addEventListener('click', () => {
+                            const id = item.dataset.id;
+                            openCalculator(id);
+                            suggestions.classList.remove('active');
+                            searchInput.value = '';
+                        });
                     });
-                });
-            }
-            suggestions.classList.add('active');
-        });
+                }
+                suggestions.classList.add('active');
+            });
 
-        document.addEventListener('click', (e) => {
-            if (!suggestions.contains(e.target) && e.target !== searchInput) {
-                suggestions.classList.remove('active');
-            }
-        });
+            document.addEventListener('click', (e) => {
+                if (!suggestions.contains(e.target) && e.target !== searchInput) {
+                    suggestions.classList.remove('active');
+                }
+            });
+        }
 
         console.log('✅ جميع الأحداث مسجلة بنجاح!');
     </script>
