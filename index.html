@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -614,7 +613,7 @@
     <!-- ====== النافذة المنبثقة ====== -->
     <div class="calc-modal-overlay" id="calcModal">
         <div class="calc-modal">
-            <button class="close-btn" id="closeModal" data-i18n="calc.close">✕</button>
+            <button class="close-btn" id="closeModal">✕</button>
             <h2 id="modalTitle">آلة حاسبة</h2>
             <div id="modalContent"></div>
         </div>
@@ -1050,7 +1049,7 @@
         ];
 
         // =============================================================
-        // 3. دوال اللغة – مع دعم ديناميكي
+        // 3. دوال اللغة
         // =============================================================
 
         function detectUserLanguage() {
@@ -1135,19 +1134,7 @@
             });
 
             // 3. ترجمة أزرار النافذة المنبثقة مباشرة
-            const modalContent = document.getElementById('modalContent');
-            if (modalContent) {
-                const btns = modalContent.querySelectorAll('.btn-primary, .btn-secondary, label');
-                btns.forEach(el => {
-                    if (el.classList.contains('btn-primary')) {
-                        el.textContent = t['calc.calculate'] || 'احسب';
-                    } else if (el.classList.contains('btn-secondary')) {
-                        el.textContent = t['calc.reset'] || 'إعادة تعيين';
-                    } else if (el.tagName === 'LABEL') {
-                        el.textContent = t['calc.example'] || 'أدخل القيمة';
-                    }
-                });
-            }
+            translateModalButtons(t);
 
             // 4. تغيير اتجاه الصفحة
             try {
@@ -1183,6 +1170,44 @@
                 };
                 document.title = titles[lang] || titles['en'] || 'Global Calculators Hub';
             } catch (e) {}
+
+            // 8. تحديث عنوان النافذة المنبثقة إذا كانت مفتوحة
+            try {
+                const modalTitle = document.getElementById('modalTitle');
+                if (modalTitle && modalTitle.textContent) {
+                    // لا نغير العنوان لأنه يحتوي على اسم الأداة
+                }
+            } catch (e) {}
+        }
+
+        // =============================================================
+        // دالة منفصلة لترجمة أزرار النافذة المنبثقة
+        // =============================================================
+        function translateModalButtons(t) {
+            try {
+                const modalContent = document.getElementById('modalContent');
+                if (!modalContent) return;
+
+                // ترجمة زر "احسب"
+                const calcBtn = modalContent.querySelector('.btn-primary');
+                if (calcBtn) {
+                    calcBtn.textContent = t['calc.calculate'] || 'احسب';
+                }
+
+                // ترجمة زر "إعادة تعيين"
+                const resetBtn = modalContent.querySelector('.btn-secondary');
+                if (resetBtn) {
+                    resetBtn.textContent = t['calc.reset'] || 'إعادة تعيين';
+                }
+
+                // ترجمة التسمية
+                const label = modalContent.querySelector('label');
+                if (label) {
+                    label.textContent = t['calc.example'] || 'أدخل القيمة';
+                }
+            } catch (e) {
+                console.warn('⚠️ خطأ في ترجمة أزرار النافذة:', e);
+            }
         }
 
         // عرض إشعار اللغة
@@ -1284,7 +1309,7 @@
         }
 
         // =============================================================
-        // 5. النافذة المنبثقة – مع ترجمة فورية وديناميكية
+        // 5. النافذة المنبثقة – مع ترجمة فورية بعد الإنشاء
         // =============================================================
         function openCalculator(id) {
             try {
@@ -1301,14 +1326,15 @@
                 const currentLang = document.documentElement.lang || 'ar';
                 const t = translations[currentLang] || translations['en'];
 
+                // إنشاء المحتوى مع أزرار تحمل أسماء مؤقتة
                 content.innerHTML = `
                     <div class="input-group">
-                        <label data-i18n-dynamic="calc.example">${t['calc.example'] || 'أدخل القيمة'}</label>
+                        <label>${t['calc.example'] || 'أدخل القيمة'}</label>
                         <input type="number" id="calc-input" placeholder="0" step="any">
                     </div>
                     <div class="btn-group">
-                        <button class="btn-primary" data-i18n-dynamic="calc.calculate" onclick="calculateSimple()">${t['calc.calculate'] || 'احسب'}</button>
-                        <button class="btn-secondary" data-i18n-dynamic="calc.reset" onclick="resetCalculator()">${t['calc.reset'] || 'إعادة تعيين'}</button>
+                        <button class="btn-primary" onclick="calculateSimple()">${t['calc.calculate'] || 'احسب'}</button>
+                        <button class="btn-secondary" onclick="resetCalculator()">${t['calc.reset'] || 'إعادة تعيين'}</button>
                     </div>
                     <div class="result-box" id="calc-result">
                         <div id="calc-result-value"></div>
@@ -1318,6 +1344,9 @@
                         🔧 نسخة مبسطة – سيتم إضافة المنطق الكامل لكل أداة عند الطلب
                     </p>
                 `;
+
+                // 🔥 إعادة تطبيق الترجمة على المحتوى الجديد
+                applyTranslations(currentLang);
 
                 modal.classList.add('active');
                 document.body.style.overflow = 'hidden';
