@@ -1225,7 +1225,263 @@
     <!-- ============================================================
     JavaScript – كل المنطق مع الكشف التلقائي للغة
     ============================================================ -->
-    <script>
+    <script>// =============================================================
+// 1. الكشف التلقائي للغة – نسخة محصنة ضد الأخطاء
+// =============================================================
+function detectUserLanguage() {
+    // اللغات المدعومة
+    const supportedLanguages = ['ar', 'en', 'fr', 'es', 'de', 'zh', 'hi', 'ru'];
+    
+    // 1. التحقق من localStorage أولاً
+    try {
+        const savedLang = localStorage.getItem('preferredLanguage');
+        if (savedLang && supportedLanguages.includes(savedLang)) {
+            return savedLang;
+        }
+    } catch (e) { /* تجاهل */ }
+
+    // 2. الحصول على لغات المتصفح
+    let browserLanguages = [];
+    try {
+        if (navigator.languages && navigator.languages.length > 0) {
+            browserLanguages = navigator.languages;
+        } else if (navigator.language) {
+            browserLanguages = [navigator.language];
+        }
+    } catch (e) { /* تجاهل */ }
+
+    // 3. البحث عن تطابق
+    for (let lang of browserLanguages) {
+        try {
+            const baseLang = lang.split('-')[0].toLowerCase();
+            if (supportedLanguages.includes(baseLang)) {
+                return baseLang;
+            }
+        } catch (e) { /* تجاهل */ }
+    }
+
+    // 4. كشف المنطقة الزمنية
+    try {
+        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const timeZoneMap = {
+            'Asia/Riyadh': 'ar', 'Asia/Dubai': 'ar', 'Asia/Kuwait': 'ar',
+            'Asia/Baghdad': 'ar', 'Asia/Amman': 'ar', 'Asia/Beirut': 'ar',
+            'Africa/Cairo': 'ar', 'Africa/Casablanca': 'ar', 'Asia/Jerusalem': 'ar',
+            'America/New_York': 'en', 'America/Los_Angeles': 'en', 'America/Chicago': 'en',
+            'Europe/London': 'en', 'Europe/Paris': 'fr', 'Europe/Berlin': 'de',
+            'Europe/Madrid': 'es', 'Europe/Moscow': 'ru', 'Asia/Shanghai': 'zh',
+            'Asia/Hong_Kong': 'zh', 'Asia/Kolkata': 'hi', 'Asia/Dhaka': 'hi'
+        };
+        if (timeZoneMap[timeZone]) {
+            return timeZoneMap[timeZone];
+        }
+    } catch (e) { /* تجاهل */ }
+
+    // 5. اللغة الافتراضية
+    return 'en';
+}
+
+// =============================================================
+// 2. دالة التهيئة الرئيسية – مع حماية كاملة
+// =============================================================
+function init() {
+    console.log('🚀 بدء تهيئة حاسباتي العالمية...');
+    
+    // 1. كشف اللغة مع حماية
+    let detectedLang = 'en'; // اللغة الافتراضية
+    try {
+        detectedLang = detectUserLanguage();
+    } catch (e) {
+        console.warn('⚠️ خطأ في كشف اللغة، استخدام الافتراضية:', e);
+    }
+    
+    // 2. التأكد من أن اللغة مدعومة
+    const supportedLanguages = ['ar', 'en', 'fr', 'es', 'de', 'zh', 'hi', 'ru'];
+    if (!supportedLanguages.includes(detectedLang)) {
+        detectedLang = 'en';
+    }
+    
+    // 3. التحقق من التفضيل المخزن
+    let finalLang = detectedLang;
+    try {
+        const savedLang = localStorage.getItem('preferredLanguage');
+        if (savedLang && supportedLanguages.includes(savedLang)) {
+            finalLang = savedLang;
+        }
+    } catch (e) { /* تجاهل */ }
+    
+    // 4. التأكد من وجود الترجمة قبل التطبيق
+    if (!translations || typeof translations !== 'object') {
+        console.error('❌ كائن الترجمة غير موجود!');
+        return;
+    }
+    
+    if (!translations[finalLang]) {
+        console.warn(`⚠️ اللغة ${finalLang} غير مدعومة، استخدام الإنجليزية`);
+        finalLang = 'en';
+    }
+    
+    // 5. تطبيق اللغة
+    try {
+        applyTranslations(finalLang);
+        console.log(`🌍 تم تطبيق اللغة: ${finalLang}`);
+    } catch (e) {
+        console.error('❌ خطأ في تطبيق الترجمة:', e);
+    }
+    
+    // 6. تحديث محدد اللغة
+    try {
+        const selector = document.getElementById('lang-selector');
+        if (selector) {
+            selector.value = finalLang;
+        }
+    } catch (e) { /* تجاهل */ }
+    
+    // 7. عرض إشعار إذا كانت اللغة مكتشفة تلقائياً
+    try {
+        const savedLang = localStorage.getItem('preferredLanguage');
+        if (!savedLang) {
+            showLanguageNotification(finalLang);
+        }
+    } catch (e) { /* تجاهل */ }
+    
+    // 8. تحميل المحتوى
+    try {
+        if (typeof renderCalculators === 'function') {
+            renderCalculators('all');
+        }
+        if (typeof renderCategories === 'function') {
+            renderCategories();
+        }
+        if (typeof initializeTheme === 'function') {
+            initializeTheme();
+        }
+    } catch (e) {
+        console.error('❌ خطأ في تحميل المحتوى:', e);
+    }
+    
+    console.log('✅ حاسباتي العالمية جاهزة!');
+}
+
+// =============================================================
+// 3. دالة applyTranslations محسنة مع حماية
+// =============================================================
+function applyTranslations(lang) {
+    // التأكد من وجود اللغة في الترجمة
+    if (!translations || !translations[lang]) {
+        console.warn(`⚠️ الترجمة غير متوفرة للغة: ${lang}، استخدام الإنجليزية`);
+        lang = 'en';
+        if (!translations || !translations[lang]) {
+            console.error('❌ لا توجد ترجمة متوفرة!');
+            return;
+        }
+    }
+    
+    const t = translations[lang];
+    
+    // تطبيق الترجمة على العناصر
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (t[key] !== undefined && t[key] !== null) {
+            try {
+                if (key === 'hero.title' || key === 'about.text' || key === 'notification.title' || key === 'notification.desc') {
+                    el.innerHTML = t[key];
+                } else {
+                    el.textContent = t[key];
+                }
+            } catch (e) { /* تجاهل */ }
+        }
+    });
+    
+    // تغيير الاتجاه
+    try {
+        const dir = (lang === 'ar') ? 'rtl' : 'ltr';
+        document.documentElement.dir = dir;
+        document.documentElement.lang = lang;
+    } catch (e) { /* تجاهل */ }
+    
+    // تحديث placeholder
+    try {
+        const search = document.getElementById('global-search');
+        if (search && t['search.placeholder']) {
+            search.placeholder = t['search.placeholder'];
+        }
+    } catch (e) { /* تجاهل */ }
+    
+    // تحديث عنوان الصفحة
+    try {
+        const titles = {
+            ar: 'حاسباتي العالمية – آلات حاسبة دقيقة ومجانية',
+            en: 'Global Calculators Hub – Accurate & Free Calculators',
+            fr: 'Calculators Hub – Calculatrices précises et gratuites',
+            es: 'Global Calculators Hub – Calculadoras precisas y gratuitas',
+            de: 'Global Calculators Hub – Präzise & kostenlose Rechner',
+            zh: 'Global Calculators Hub – 精确且免费的计算器',
+            hi: 'Global Calculators Hub – सटीक और मुफ्त कैलकुलेटर',
+            ru: 'Global Calculators Hub – Точные и бесплатные калькуляторы'
+        };
+        document.title = titles[lang] || titles['en'];
+    } catch (e) { /* تجاهل */ }
+}
+
+// =============================================================
+// 4. عرض الإشعار مع حماية
+// =============================================================
+function showLanguageNotification(lang) {
+    try {
+        if (!translations || !translations[lang]) {
+            lang = 'en';
+        }
+        const t = translations[lang];
+        
+        const notif = document.getElementById('langNotification');
+        if (!notif) return;
+        
+        const titleEl = document.getElementById('langNotifTitle');
+        const descEl = document.getElementById('langNotifDesc');
+        const confirmBtn = document.getElementById('langNotifConfirm');
+        const dismissBtn = document.getElementById('langNotifDismiss');
+        
+        if (titleEl) titleEl.textContent = t['notification.title'] || '🌍 تم اكتشاف لغتك';
+        if (descEl) descEl.textContent = t['notification.desc'] || 'تم ضبط اللغة تلقائياً حسب إعدادات جهازك.';
+        if (confirmBtn) confirmBtn.textContent = t['notification.confirm'] || 'موافق';
+        if (dismissBtn) dismissBtn.textContent = t['notification.dismiss'] || 'تغيير لاحقاً';
+        
+        notif.classList.add('active');
+        
+        // إخفاء تلقائي بعد 8 ثوانٍ
+        setTimeout(() => {
+            notif.classList.remove('active');
+        }, 8000);
+    } catch (e) {
+        console.warn('⚠️ خطأ في عرض إشعار اللغة:', e);
+    }
+}
+
+// =============================================================
+// 5. تهيئة الوضع الليلي
+// =============================================================
+function initializeTheme() {
+    try {
+        const theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        const toggle = document.getElementById('theme-toggle');
+        if (toggle) {
+            toggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+        }
+    } catch (e) { /* تجاهل */ }
+}
+
+// =============================================================
+// 6. بدء التشغيل – مع تأخير بسيط لضمان تحميل كل شيء
+// =============================================================
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(init, 100);
+    });
+} else {
+    setTimeout(init, 100);
+}
         // =============================================================
         // 1. البيانات – 30+ آلة حاسبة
         // =============================================================
